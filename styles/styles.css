@@ -41,14 +41,14 @@ h1, h2 {
 p {
   font-family: productSansThin;
   color: white;
-  margin-right: 65%;
+  /*margin-right: 65%;
   padding-left: 20px;
   padding-right: 20px;
   padding-top: 10px;
-  padding-bottom: 10px;
+  padding-bottom: 10px;*/
   /*padding: 10px 10px 20px 20px;*/
   font-size: 18px;
-  text-align: left;
+  /*text-align: left;*/
   line-height: normal;
 }
 .top {
@@ -63,23 +63,18 @@ p {
   display: block;
   margin: auto;
 }
-.home-images {
-  float: right;
-  background-color: inherit;
+.column {
+  float: left;
+  width: 25%;
+  padding: 5px;
 }
 
-.container {
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
 
-    padding: 20px 40px 40px;
-    max-width: 100%;
-    display: flex;
-    &__image {
-        margin: 50px 50px 50px 50px;
-        width: 200px;
-        object-fit: contain;
-        align-self: flex-start;
-    }
-    &__text {
-        flex: 1 1 auto;
-    }
+.float {
+float: right;
 }
