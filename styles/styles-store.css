@@ -1,0 +1,87 @@
+* {
+  padding: 0;
+  margin: 0;
+
+}
+
+/* Custom fonts */
+@font-face {
+  font-family: visitor;
+  src: url(fonts/visitor1.ttf);
+}
+@font-face {
+  font-family: productSansBold;
+  src: url(fonts/ProductSans-Bold.ttf);
+}
+@font-face {
+  font-family: productSansReg;
+  src: url(fonts/ProductSans-Regular.ttf);
+}
+@font-face {
+  font-family: productSansThin;
+  src: url(fonts/ProductSans-thin.ttf);
+}
+@font-face {
+  font-family: menloRegular;
+  src: url(fonts/Menlo-Regular.woff);
+}
+
+/* Navigation Bar */
+
+div ul.nav {
+  list-style-type: none;
+  overflow: hidden;
+  background-color: #91C0D8;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+
+div ul li.nav {
+  float: left;
+}
+
+div ul li a.nav {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 20px 20px;
+  text-decoration: none;
+  font-family: productSansThin;
+  font-size: 20px;
+}
+
+div ul li a.nav:hover {
+	background-color: white;
+	color: gray;
+
+}
+
+/* Type Selectors */
+
+body {
+  background-color: #2A373E;
+}
+img {
+  padding: 20px;
+
+}
+table {
+  margin: auto;
+}
+h1 {
+  padding-top: 10%;
+  padding-bottom: 5%;
+  text-align: center;
+  font-family: visitor;
+  color: #91C0D8;
+  font-size: 400%;
+}
+img:hover {
+  box-shadow: 0 20px 30px 0 rgba(0, 0, 0, 0.2), 0 20px 35px 0 rgba(0, 0, 0, 0.19);
+  }
+}
+
+/* Class Selectors */
