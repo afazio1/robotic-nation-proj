@@ -19,7 +19,7 @@
 }
 @font-face {
   font-family: productSansThin;
-  src: url(fonts/ProductSans-thin.ttf);
+  src: url(fonts/ProductSans-Thin.ttf);
 }
 @font-face {
   font-family: menloRegular;
@@ -106,7 +106,7 @@ p {
   display: block;
   margin: auto;
   padding-bottom: 100px;
-  
+
 }
 #robo-image {
   padding-top: 50px;
