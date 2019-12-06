@@ -63,7 +63,7 @@ div ul li a.nav:hover {
 
 
 h2 {
-  font-family: productSansBold;
+  font-family: visitor;
   font-size: 60px;
   text-align: left;
 
@@ -80,7 +80,7 @@ h1 {
 }
 
 p {
-  font-family: productSansReg;
+  font-family: productSansThin;
   color: white;
   /*margin-right: 65%;*/
   padding-left: 20px;

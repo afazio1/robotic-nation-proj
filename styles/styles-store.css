@@ -73,14 +73,27 @@ table {
 }
 h1 {
   padding-top: 10%;
-  padding-bottom: 5%;
+  padding-bottom: 0%;
   text-align: center;
   font-family: visitor;
   color: #91C0D8;
   font-size: 400%;
 }
+h2 {
+  font-family: visitor;
+  color: white;
+  text-align: center;
+  font-size: 200%;
+  padding-top: 5%;
+  padding-bottom: 5%;
+  text-shadow: 2.5px 2.5px #536E7B;
+}
+h2 span {
+  font-size: 1.2em;
+}
 img:hover {
   box-shadow: 0 20px 30px 0 rgba(0, 0, 0, 0.2), 0 20px 35px 0 rgba(0, 0, 0, 0.19);
+  background-color: white;
   }
 }
 
