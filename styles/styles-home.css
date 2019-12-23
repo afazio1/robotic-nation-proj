@@ -82,14 +82,17 @@ h1 {
 p {
   font-family: productSansThin;
   color: white;
-  /*margin-right: 65%;*/
+  margin-right: 65%;
   padding-left: 20px;
   padding-right: 20px;
   padding-top: 10px;
   padding-bottom: 10px;
-  /*padding: 10px 10px 20px 20px;*/
+  padding: 10px 10px 20px 20px;
   font-size: 24px;
-  /*text-align: left;*/
+  text-align: left;
+}
+img {
+  padding: 15px;
 }
 
 /* Classes */
@@ -110,19 +113,9 @@ p {
 }
 #robo-image {
   padding-top: 50px;
+  
 }
-.brief-summary {
-  width: 25%;
-  height: 100px;
-  display: inline-block;
-  padding: 10px;
-  padding-right: 30px;
-}
-.img-section {
 
-  display: inline-block;
-  padding: 30px;
-}
 /*Animations*/
 @keyframes rn-logo {
   0% {transform: rotate(0deg); margin-left: 0%;}
