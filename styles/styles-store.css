@@ -65,7 +65,8 @@ body {
   background-color: #2A373E;
 }
 img {
-  padding: 20px;
+  padding: 5px;
+  border: 5px solid #2A373E;
 
 }
 table {
@@ -88,13 +89,19 @@ h2 {
   padding-bottom: 5%;
   text-shadow: 2.5px 2.5px #536E7B;
 }
+h3 {
+  font-family: visitor;
+  text-align: center;
+  color: #91C0D8;
+  font-size: 200%;
+
+}
 h2 span {
   font-size: 1.2em;
 }
 img:hover {
-  box-shadow: 0 20px 30px 0 rgba(0, 0, 0, 0.2), 0 20px 35px 0 rgba(0, 0, 0, 0.19);
-  background-color: white;
-  }
+  border: 0;
 }
+
 
 /* Class Selectors */
