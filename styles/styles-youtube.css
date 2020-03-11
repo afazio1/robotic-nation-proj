@@ -58,11 +58,6 @@ div ul li a.nav:hover {
 	background-color: white;
 	color: gray;
 }
-/*iframe {
-  margin-top: 30%;
-  margin-right: 10%;
-  padding: 10px;
-}*/
 table {
   margin: auto;
   margin-top: 7%;
@@ -78,7 +73,7 @@ td:nth-child(2) {
   padding-left: 100px;
 }
 p { 
-  width: 75%;
+  width: 80%;
   color: white;
   font-size: 125%;
   font-family: productSansThin;
