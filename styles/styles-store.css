@@ -9,18 +9,7 @@
   font-family: visitor;
   src: url(fonts/visitor1.ttf);
 }
-@font-face {
-  font-family: productSansBold;
-  src: url(fonts/ProductSans-Bold.ttf);
-}
-@font-face {
-  font-family: productSansReg;
-  src: url(fonts/ProductSans-Regular.ttf);
-}
-@font-face {
-  font-family: productSansThin;
-  src: url(fonts/ProductSans-Thin.ttf);
-}
+
 @font-face {
   font-family: menloRegular;
   src: url(fonts/Menlo-Regular.woff);
@@ -28,35 +17,51 @@
 
 /* Navigation Bar */
 
+.navigation {
+  background-color: #2A373E;
+}
 div ul.nav {
   list-style-type: none;
   overflow: hidden;
-  background-color: #91C0D8;
   position: fixed;
   top: 0;
   width: 100%;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-
+  background-color: #2A373E;
+}
+li > a {
+  position: relative;
+  text-decoration: none;
+}
+li > a.nav:before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: white;
+  visibility: hidden;
+  -webkit-transform: scaleX(0);
+  transform: scaleX(0);
+  -webkit-transition: all 0.3s ease-in-out 0s;
+  transition: all 0.3s ease-in-out 0s;
 }
 
-div ul li.nav {
-  float: left;
-}
-
-div ul li a.nav {
+ul li a.nav {
   display: block;
   color: white;
   text-align: center;
-  padding: 20px 20px;
+  padding: 20px;
   text-decoration: none;
-  font-family: productSansThin;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
   font-size: 20px;
 }
 
-div ul li a.nav:hover {
-	background-color: white;
-	color: gray;
-
+li > a.nav:hover:before {
+  visibility: visible;
+  -webkit-transform: scaleX(1);
+  transform: scaleX(1);
 }
 
 /* Type Selectors */
