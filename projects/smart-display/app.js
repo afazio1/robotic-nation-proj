@@ -99,7 +99,7 @@ function updateclock() {
 }
 
 function getWeather() {
-    var cityID = 5097830;
+    var cityID = 5097830; // change to your city ID
     var key = 'YOUR_API_KEY';
     fetch('https://api.openweathermap.org/data/2.5/weather?id=' + cityID + '&appid=' + key)
     .then(function(resp) { return resp.json()})
@@ -137,6 +137,6 @@ function getYoutubeData() {
     .catch(function() {
         console.log("error");
     });
-    setTimeout(getYoutubeData, 43200000) // weather will update every 12 hours
+    setTimeout(getYoutubeData, 43200000) // stats will update every 12 hours
 }
 
