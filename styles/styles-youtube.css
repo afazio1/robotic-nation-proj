@@ -120,10 +120,12 @@ h2 {
   height: max-content;
   margin-left: 3%;
   border-radius: 5px;
+  font-family: 'Roboto', sans-serif;
+
 }
 .code a {
   text-align: center;
-  padding: 23px;
+  padding: 19px;
   font-size: 200%;
   color: #91C0D8;
   text-decoration: none;
