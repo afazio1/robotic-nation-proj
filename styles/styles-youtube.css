@@ -162,10 +162,10 @@ a:before {
   }
   .code a:hover:before {
     left: 5px;
-    opacity: 1;
+    opacity: 0.5;
   }
   .code a:hover:after {
-    opacity: 1;
+    opacity: 0.5;
     right: 5px;
   } 
   .code a:hover {
