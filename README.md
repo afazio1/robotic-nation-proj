@@ -1,4 +1,4 @@
 # Robotic Nation Website
-The official website of the Robotic Nation YouTube channel
+The official project page of Robotic Nation
 
-This site is a hub for all the project source code. 
+This repo is a hub for all YouTube projects and source code. 
