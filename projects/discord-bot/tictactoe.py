@@ -126,5 +126,11 @@ async def tictactoe_error(ctx, error):
     elif isinstance(error, commands.BadArgument):
         await ctx.send("Please make sure to mention/ping players (ie. <@688534433879556134>).")
 
+@place.error
+async def place_error(ctx, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send("Please enter a position you would like to mark.")
+    elif isinstance(error, commands.BadArgument):
+        await ctx.send("Please make sure to enter an integer.")
 
 client.run("YOUR_TOKEN")
