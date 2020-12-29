@@ -32,7 +32,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager" selected="Python.voice">
+  <component name="RunManager" selected="Python.tictactoe">
     <configuration type="PythonConfigurationType" factoryName="Python">
       <module name="tutorial" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -159,6 +159,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="tictactoe" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="tutorial" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="$PROJECT_DIR$/../../../db-course/venv/bin/python" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tictactoe.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="voice" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="tutorial" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -205,9 +226,10 @@
       <item itemvalue="Python.delete-messages" />
       <item itemvalue="Python.minecraft-bot" />
       <item itemvalue="Python.modmail" />
-      <item itemvalue="Python.voice" />
       <item itemvalue="Python.server-info" />
       <item itemvalue="Python.test-bot" />
+      <item itemvalue="Python.tictactoe" />
+      <item itemvalue="Python.voice" />
       <item itemvalue="Python.youtube-bot" />
     </list>
   </component>
@@ -226,45 +248,53 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="184" y="112" width="1071" height="724" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1606521504656">
+    <state x="184" y="104" width="1071" height="796" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1609262595121">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="184" y="112" width="1071" height="724" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.900@0.0.1440.900" timestamp="1606521504656" />
-    <state x="579" y="211" key="EnvironmentVariablesDialog" timestamp="1606521498027">
+    <state x="184" y="104" width="1071" height="796" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.900@0.0.1440.900" timestamp="1609262595121" />
+    <state x="507" y="210" key="#com.intellij.ide.macro.MacrosDialog" timestamp="1607975436830">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="579" y="211" key="EnvironmentVariablesDialog/0.0.1440.900@0.0.1440.900" timestamp="1606521498027" />
-    <state width="1419" height="245" key="GridCell.Tab.0.bottom" timestamp="1606770222090">
+    <state x="507" y="210" key="#com.intellij.ide.macro.MacrosDialog/0.0.1440.900@0.0.1440.900" timestamp="1607975436830" />
+    <state x="458" y="204" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1606858728921">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1419" height="245" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1606770222090" />
-    <state width="1419" height="245" key="GridCell.Tab.0.bottom/0.23.1440.825@0.23.1440.825" timestamp="1606519805748" />
-    <state width="1419" height="245" key="GridCell.Tab.0.bottom/0.23.1440.826@0.23.1440.826" timestamp="1606524109380" />
-    <state width="1419" height="245" key="GridCell.Tab.0.center" timestamp="1606770222089">
+    <state x="458" y="204" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1440.900@0.0.1440.900" timestamp="1606858728921" />
+    <state x="579" y="211" key="EnvironmentVariablesDialog" timestamp="1607975420592">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1419" height="245" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1606770222089" />
-    <state width="1419" height="245" key="GridCell.Tab.0.center/0.23.1440.825@0.23.1440.825" timestamp="1606519805744" />
-    <state width="1419" height="245" key="GridCell.Tab.0.center/0.23.1440.826@0.23.1440.826" timestamp="1606524109379" />
-    <state width="1419" height="245" key="GridCell.Tab.0.left" timestamp="1606770222088">
+    <state x="579" y="211" key="EnvironmentVariablesDialog/0.0.1440.900@0.0.1440.900" timestamp="1607975420592" />
+    <state width="1419" height="245" key="GridCell.Tab.0.bottom" timestamp="1609277471606">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1419" height="245" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1606770222088" />
-    <state width="1419" height="245" key="GridCell.Tab.0.left/0.23.1440.825@0.23.1440.825" timestamp="1606519805743" />
-    <state width="1419" height="245" key="GridCell.Tab.0.left/0.23.1440.826@0.23.1440.826" timestamp="1606524109379" />
-    <state width="1419" height="245" key="GridCell.Tab.0.right" timestamp="1606770222090">
+    <state width="1419" height="245" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1609277471606" />
+    <state width="1419" height="245" key="GridCell.Tab.0.bottom/0.23.1440.825@0.23.1440.825" timestamp="1607704907613" />
+    <state width="1419" height="245" key="GridCell.Tab.0.bottom/0.23.1440.826@0.23.1440.826" timestamp="1609269156162" />
+    <state width="1419" height="245" key="GridCell.Tab.0.center" timestamp="1609277471605">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1419" height="245" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1606770222090" />
-    <state width="1419" height="245" key="GridCell.Tab.0.right/0.23.1440.825@0.23.1440.825" timestamp="1606519805746" />
-    <state width="1419" height="245" key="GridCell.Tab.0.right/0.23.1440.826@0.23.1440.826" timestamp="1606524109380" />
-    <state x="229" y="89" key="SettingsEditor" timestamp="1606767172385">
+    <state width="1419" height="245" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1609277471605" />
+    <state width="1419" height="245" key="GridCell.Tab.0.center/0.23.1440.825@0.23.1440.825" timestamp="1607704907612" />
+    <state width="1419" height="245" key="GridCell.Tab.0.center/0.23.1440.826@0.23.1440.826" timestamp="1609269156161" />
+    <state width="1419" height="245" key="GridCell.Tab.0.left" timestamp="1609277471603">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="229" y="89" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1606767172385" />
-    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1598629413518">
+    <state width="1419" height="245" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1609277471603" />
+    <state width="1419" height="245" key="GridCell.Tab.0.left/0.23.1440.825@0.23.1440.825" timestamp="1607704907611" />
+    <state width="1419" height="245" key="GridCell.Tab.0.left/0.23.1440.826@0.23.1440.826" timestamp="1609269156160" />
+    <state width="1419" height="245" key="GridCell.Tab.0.right" timestamp="1609277471606">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1598629413518" />
+    <state width="1419" height="245" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1609277471606" />
+    <state width="1419" height="245" key="GridCell.Tab.0.right/0.23.1440.825@0.23.1440.825" timestamp="1607704907612" />
+    <state width="1419" height="245" key="GridCell.Tab.0.right/0.23.1440.826@0.23.1440.826" timestamp="1609269156161" />
+    <state x="229" y="89" key="SettingsEditor" timestamp="1609262648486">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="229" y="89" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1609262648486" />
+    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1609274735075">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1609274735075" />
   </component>
 </project>
