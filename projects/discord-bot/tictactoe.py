@@ -97,6 +97,7 @@ async def place(ctx, pos: int):
                 if gameOver == True:
                     await ctx.send(mark + " wins!")
                 elif count >= 9:
+                    gameOver = True
                     await ctx.send("It's a tie!")
 
                 # switch turns
