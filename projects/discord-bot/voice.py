@@ -183,8 +183,11 @@ async def banlist(ctx):#금지어 목록 출력 커맨드
 @client.event
 async def on_message(ctx):
     if any([word in ctx.content for word in illegal_words]):#금지어 삭제 기능
-        await ctx.delete()
-        await ctx.channel.send("That Word Is Not Allowed To Be Used! Continued Use Of Mentioned Word Would Lead To Punishment!")
+        if ctx.author == client.user:   #금지어 목록 출력을 위해 봇이 쓰는 금지어는 pass
+            pass
+        else:   #봇 이외에 금지어를 사용하면 메세지를 삭제하고 경고문 출력
+            await ctx.delete()
+            await ctx.channel.send("That Word Is Not Allowed To Be Used! Continued Use Of Mentioned Word Would Lead To Punishment!")
     else:
         await client.process_commands(ctx)
 
