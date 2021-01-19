@@ -4,6 +4,23 @@ import sqlite3
 conn = sqlite3.connect("./artistDB.db")
 c = conn.cursor()
 
+class BAN:  #금지어 목록 관리
+    c.execute("CREATE TABLE IF NOT EXISTS BAN(NUM INTEGER PRIMARY KEY AUTOINCREMENT, WORD TEXT)")
+
+    def BANINSERT(msg): #금지어 추가 메서드
+        c.execute("INSERT INTO BAN('WORD') VALUES(?)",[msg])
+    
+    def BANREAD(): #금지어 목록 호출 메서드
+        banlist=[] #금지어 목록을 저장할 리스트
+        for word in c.execute("SELECT WORD FROM BAN"):
+            banstr = list(word) #데이터베이스 리턴타입이 튜플이므로 리스트로 변환
+            banlist.append(str(banstr[0]))#리스트타입 문자열로 변환하여 리스트에 추가
+        return banlist #전체 금지어 목록 반환
+
+    def BANDELETE(msg): #금지어 삭제 메서드
+        c.execute("DELETE FROM BAN WHERE WORD = :WORD",{"WORD":msg})
+    
+
 #CREATE
 def CREATE() :
     #테이블 생성
