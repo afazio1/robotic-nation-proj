@@ -10,7 +10,7 @@ queue = list()
 #유튜브 제목, 하이퍼링크주소 가져오는 방식
 #변수1, 변수2 = Crawling_YT_Comment(str형식의 데이터)
 #변수1과 변수2는 리스트 형식 
-test1, test2 = Crawling_YT_Comment("파노라마")
+test1, test2 = Crawling_YT_Title("파노라마")
 print(test1, test2)
 
 class Song :
@@ -176,5 +176,14 @@ async def stop(ctx):
     voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
     voice.stop()
 
+@client.command()
+async def comment(ctx, url:str):
+    yt_id, yt_comment, yt_like = Crawling_YT_Comment(url)
+    if len(yt_id)>10:
+        yt_id, yt_comment, yt_like = yt_id[:10], yt_comment[:10], yt_like[:10]
+    emb = discord.Embed(title="Comments",)
+    await ctx.send()
+    pass
 
-#client.run('YOUR_TOKEN')
+
+client.run('Nzk4NDY1MzE4MTEyNDYwODIw.X_1axg.ekA3ydUNOPwI9BmxKAeV7YBeTS4')

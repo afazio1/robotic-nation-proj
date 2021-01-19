@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import time
 
 #exe파일 경로는 상대경로가 아닌 절대경로로 설정해야함.
-def Crawling_YT_Title(comm):
+def Crawling_YT_Comment(comm):
     driver = webdriver.Chrome('C:/Users/BBAEK/Desktop/계절학기/Team Project/Discord_oss_project/projects/discord-bot/chromedriver.exe')
     url = comm
     driver.get(url)
@@ -54,7 +54,7 @@ def Crawling_YT_Title(comm):
 
     return youtube_Ids, youtube_comments, youtube_likes
 
-def Crawling_YT_Comment(comm):
+def Crawling_YT_Title(comm):
     driver = webdriver.Chrome('C:/Users/BBAEK/Desktop/계절학기/Team Project/Discord_oss_project/projects/discord-bot/chromedriver.exe')
     url = "https://www.youtube.com/results?search_query={}".format(comm)
     driver.get(url)
