@@ -181,9 +181,12 @@ async def comment(ctx, url:str):
     yt_id, yt_comment, yt_like = Crawling_YT_Comment(url)
     if len(yt_id)>10:
         yt_id, yt_comment, yt_like = yt_id[:10], yt_comment[:10], yt_like[:10]
-    emb = discord.Embed(title="Comments",)
-    await ctx.send()
-    pass
+    
+    emb = discord.Embed(title="TOP 10 Comments",description="This is comment about {}".format(url),color=discord.Color.blue())
+    emb.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+    for i in range(len(yt_id)):
+        emb.add_field(name="{} (🧡{})".format(yt_id[i], yt_like[i]), value="{}".format(yt_comment[i]),inline=False)
 
+    await ctx.send(embed=emb)
 
-client.run('Nzk4NDY1MzE4MTEyNDYwODIw.X_1axg.ekA3ydUNOPwI9BmxKAeV7YBeTS4')
+client.run('Nzk4NDY1MzE4MTEyNDYwODIw.X_1axg.-cBUnrzm57stjcAVASLwKDwCRf4')
