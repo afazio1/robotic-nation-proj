@@ -169,5 +169,8 @@ async def stop(ctx):
     voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
     voice.stop()
 
+@client.command() #채팅채널 메세지 삭제 커맨드
+async def clear(ctx, amount):
+    await ctx.channel.purge(limit=int(amount)+1)#삭제 커맨트 인자 수 만큼 삭제+삭제커맨드메세지 포함 하여 삭제(+1)
 
 client.run('YOUR_TOKEN')
