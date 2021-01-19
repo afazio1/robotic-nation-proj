@@ -1,3 +1,4 @@
+import asyncio
 import discord
 from discord.ext import commands
 import youtube_dl
@@ -5,6 +6,30 @@ import os
 
 client = commands.Bot(command_prefix="!")
 queue = list()
+que = {}
+playerlist = {}
+playlist = list() #재생목록 리스트
+
+def Queue(id,ctx,voice): #음악 재생용 큐
+    #voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
+    if que[id] != []:
+        player = que[id].pop(0)
+        print(player)
+        playerlist[id] = player
+        #del playlist[0]
+        song_there = os.path.isfile("song.mp3")
+        try:
+            if song_there:
+                os.remove("song.mp3")
+        except PermissionError:
+            #await ctx.send("Wait for the current playing music to end or use the 'stop' command")
+            return
+        for file in os.listdir("./"):
+            if file.startswith("{}".format(str(player))):
+                os.rename(file, "song.mp3")
+        
+        voice.play(discord.FFmpegPCMAudio("song.mp3"))
+        #player.start()
 
 class Song :
     def __init__(self) :
@@ -99,17 +124,15 @@ async def nowplaying(ctx) :
 
 @client.command()
 async def play(ctx, url : str):
-    song_there = os.path.isfile("song.mp3")
-    try:
-        if song_there:
-            os.remove("song.mp3")
-    except PermissionError:
-        await ctx.send("Wait for the current playing music to end or use the 'stop' command")
-        return
+    
+    
 
     # voiceChannel = discord.utils.get(ctx.guild.voice_channels, name='General')
     voiceChannel = ctx.author.voice.channel
-    await voiceChannel.connect()
+    if client.voice_clients:
+        pass
+    else:
+        await voiceChannel.connect()
     voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
 
     ydl_opts = {
@@ -120,15 +143,21 @@ async def play(ctx, url : str):
             'preferredquality': '192',
         }],
     }
+    
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
         info_dict = ydl.extract_info(url, download=False)
         video_title = info_dict.get('title', None)
         queue.append(video_title)
-    for file in os.listdir("./"):
-        if file.endswith(".mp3"):
-            os.rename(file, "song.mp3")
-    voice.play(discord.FFmpegPCMAudio("song.mp3"))
+        
+    if  ctx.guild in que:
+        que[ctx.guild.id].append(video_title)
+    else:
+        que[ctx.guild.id] = [video_title]
+    Queue(ctx.guild.id, ctx, voice)
+
+    
+    #voice.play(discord.FFmpegPCMAudio("song.mp3"))
     nowplaying(ctx)
 
 
@@ -169,5 +198,8 @@ async def stop(ctx):
     voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
     voice.stop()
 
+@client.command()
+async def playlist(ctx):
+    await ctx.send(Playlist())
 
-client.run('YOUR_TOKEN')
+client.run('Nzk4NDY3MjA3NDc0NTc3NDA5.X_1ciQ.rx8ZO_Df-ikcMYbOjKYvgBpH8MY')
