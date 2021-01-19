@@ -2,10 +2,10 @@ import discord
 from discord.ext import commands
 import youtube_dl
 import os
+from dbQuery import BAN as ban
 
 client = commands.Bot(command_prefix="!")
 queue = list()
-illegal_words = ['apple','pear','banana']
 
 class Song :
     def __init__(self) :
@@ -177,32 +177,38 @@ async def clear(ctx, amount):
 
 @client.command()
 async def banlist(ctx):#금지어 목록 출력 커맨드
-    if illegal_words != None:
-        await ctx.send(illegal_words)#지정된 금지어 리스트 출력
+    banlist = ban.BANREAD() #dbQuery.py의 BAN클래스 에 정의된 BANREAD() 호출 BAN 테이블에 저장된 금지어 목록리턴
+    if banlist != []: #데이터베이스의 금지어 목록이 비어있는지 확인
+        await ctx.send(banlist)#지정된 금지어 리스트 출력
+    else:
+        await ctx.send("banlist's empty")
 
 @client.command()
 async def addban(ctx, msg): #금지어목록 추가
-    if msg in illegal_words:
-        await ctx.send("목록에 있습니다.")
+    banlist = ban.BANREAD() #데이터베이스의 금지어 목록을 가져옴
+    if msg in banlist:      #추가하려는 금지어가 데이터베이스의 금지어 목록에 있는지 확인
+        await ctx.send("이미 목록에 있습니다.")
     else:
-        illegal_words.append(msg)
-        await ctx.send(illegal_words)#목록에 금지어가 없으면 추가
+        ban.BANINSERT(msg)  #금지어 추가를위해 BANINSERT()호출 인자로 금지어 msg 전달
+        await ctx.send(ban.BANREAD()) #추가 후 금지어 목록 호출
 
 @client.command()
 async def delban(ctx, msg): #금지어목록 삭제
-    if msg in illegal_words:
-        illegal_words.remove(msg)#리스트에서 금지어 삭제
+    banlist = ban.BANREAD()
+    if msg in banlist:  #삭제할 금지어가 데이터베이스에 있는지 확인
+        ban.BANDELETE(msg)  #BANDELETE() 호출하여 금지어 삭제
         await ctx.send(msg+"삭제")
-        await ctx.send(illegal_words)
+        await ctx.send(ban.BANREAD())   #삭제 후 금지어 목록 호출
     else:
         await ctx.send("목록에 없습니다.")
 
 @client.event
 async def on_message(ctx):
-    if any([word in ctx.content for word in illegal_words]):#금지어 삭제 기능
+    banlist = ban.BANREAD()
+    if any([word in ctx.content for word in banlist]):#금지어 삭제 기능
         if ctx.author == client.user:   #금지어 목록 출력을 위해 봇이 쓰는 금지어는 pass
             pass
-        elif ctx.content.startswith("!delban"):#메세지 시작이 !delban명령어일 경우
+        elif ctx.content.startswith(client.command_prefix+"delban"):#메세지 시작이 !delban명령어일 경우
             await client.process_commands(ctx) #명령어 실행
         else:   #봇 이외에 금지어를 사용하면 메세지를 삭제하고 경고문 출력
             await ctx.delete()
