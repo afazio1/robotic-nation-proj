@@ -10,12 +10,12 @@ def Crawling_YT_Comment(comm):
 
     last_page = driver.execute_script('return document.documentElement.scrollHeight')
 
-    for i in range(4):
+    for i in range(3):
         #화면상 스크롤 위치 이동 : scrollTo(x,Y) ,scrollTo(x,Y+number)
         #화면 최하단으로 스크롤 이동 : scrollTo(0, document.body.scrollHeight)
         driver.execute_script("window.scrollTo(0,document.documentElement.scrollHeight);")
         #Wait to load page
-        time.sleep(1)
+        time.sleep(2)
         #scroll height is last height? 
         new_page = driver.execute_script("return document.documentElement.scrollHeight")
 
@@ -23,6 +23,7 @@ def Crawling_YT_Comment(comm):
             break
         last_page = new_page
 
+    time.sleep(1)
     html_src = driver.page_source
     driver.close()
 
