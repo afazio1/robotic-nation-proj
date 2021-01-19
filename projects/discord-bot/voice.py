@@ -180,11 +180,30 @@ async def banlist(ctx):#금지어 목록 출력 커맨드
     if illegal_words != None:
         await ctx.send(illegal_words)#지정된 금지어 리스트 출력
 
+@client.command()
+async def addban(ctx, msg): #금지어목록 추가
+    if msg in illegal_words:
+        await ctx.send("목록에 있습니다.")
+    else:
+        illegal_words.append(msg)
+        await ctx.send(illegal_words)#목록에 금지어가 없으면 추가
+
+@client.command()
+async def delban(ctx, msg): #금지어목록 삭제
+    if msg in illegal_words:
+        illegal_words.remove(msg)#리스트에서 금지어 삭제
+        await ctx.send(msg+"삭제")
+        await ctx.send(illegal_words)
+    else:
+        await ctx.send("목록에 없습니다.")
+
 @client.event
 async def on_message(ctx):
     if any([word in ctx.content for word in illegal_words]):#금지어 삭제 기능
         if ctx.author == client.user:   #금지어 목록 출력을 위해 봇이 쓰는 금지어는 pass
             pass
+        elif ctx.content.startswith("!delban"):#메세지 시작이 !delban명령어일 경우
+            await client.process_commands(ctx) #명령어 실행
         else:   #봇 이외에 금지어를 사용하면 메세지를 삭제하고 경고문 출력
             await ctx.delete()
             await ctx.channel.send("That Word Is Not Allowed To Be Used! Continued Use Of Mentioned Word Would Lead To Punishment!")
