@@ -5,6 +5,7 @@ import os
 
 client = commands.Bot(command_prefix="!")
 queue = list()
+illegal_words = ['apple','pear','banana']
 
 class Song :
     def __init__(self) :
@@ -35,6 +36,7 @@ class Song :
             info_dict = ydl.extract_info(url, download=False)
             video_title = info_dict.get('title', None)
         return video_title
+
 
 @client.command()
 async def auto(ctx) :
@@ -172,5 +174,18 @@ async def stop(ctx):
 @client.command() #채팅채널 메세지 삭제 커맨드
 async def clear(ctx, amount):
     await ctx.channel.purge(limit=int(amount)+1)#삭제 커맨트 인자 수 만큼 삭제+삭제커맨드메세지 포함 하여 삭제(+1)
+
+@client.command()
+async def banlist(ctx):#금지어 목록 출력 커맨드
+    if illegal_words != None:
+        await ctx.send(illegal_words)#지정된 금지어 리스트 출력
+
+@client.event
+async def on_message(ctx):
+    if any([word in ctx.content for word in illegal_words]):#금지어 삭제 기능
+        await ctx.delete()
+        await ctx.channel.send("That Word Is Not Allowed To Be Used! Continued Use Of Mentioned Word Would Lead To Punishment!")
+    else:
+        await client.process_commands(ctx)
 
 client.run('YOUR_TOKEN')
