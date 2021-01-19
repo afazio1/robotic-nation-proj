@@ -2,8 +2,9 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 import time
 
+#exe파일 경로는 상대경로가 아닌 절대경로로 설정해야함.
 def Crawling_YT_Title(comm):
-    driver = webdriver.Chrome('./chromedriver.exe')
+    driver = webdriver.Chrome('C:/Users/BBAEK/Desktop/계절학기/Team Project/Discord_oss_project/projects/discord-bot/chromedriver.exe')
     url = comm
     driver.get(url)
 
@@ -51,11 +52,10 @@ def Crawling_YT_Title(comm):
         str_tmp = str(yt_like[i].text)
         youtube_likes.append(int(str_tmp))
 
-    for i in range(len(youtube_Ids)):
-        print(youtube_Ids[i], youtube_comments[i], youtube_likes[i])
+    return youtube_Ids, youtube_comments, youtube_likes
 
 def Crawling_YT_Comment(comm):
-    driver = webdriver.Chrome('./chromedriver.exe')
+    driver = webdriver.Chrome('C:/Users/BBAEK/Desktop/계절학기/Team Project/Discord_oss_project/projects/discord-bot/chromedriver.exe')
     url = "https://www.youtube.com/results?search_query={}".format(comm)
     driver.get(url)
 
@@ -73,5 +73,7 @@ def Crawling_YT_Comment(comm):
         youtube_title.append(yt_info[i].text.strip())
         youtube_href.append('{}{}'.format('https://www.youtube.com',yt_info[i].get('href')))
 
-    for i in range(len(youtube_title)):
-        print(youtube_title[i], youtube_href[i])
+    if len(youtube_title)>5:
+        return youtube_title[:5], youtube_href[:5]
+    else:
+        return youtube_title, youtube_href

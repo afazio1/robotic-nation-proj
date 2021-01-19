@@ -2,9 +2,16 @@ import discord
 from discord.ext import commands
 import youtube_dl
 import os
+from crawling_YT import Crawling_YT_Title, Crawling_YT_Comment
 
 client = commands.Bot(command_prefix="!")
 queue = list()
+
+#유튜브 제목, 하이퍼링크주소 가져오는 방식
+#변수1, 변수2 = Crawling_YT_Comment(str형식의 데이터)
+#변수1과 변수2는 리스트 형식 
+test1, test2 = Crawling_YT_Comment("파노라마")
+print(test1, test2)
 
 class Song :
     def __init__(self) :
@@ -170,4 +177,4 @@ async def stop(ctx):
     voice.stop()
 
 
-client.run('YOUR_TOKEN')
+#client.run('YOUR_TOKEN')
