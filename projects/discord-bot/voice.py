@@ -4,7 +4,11 @@ import youtube_dl
 import os
 from dbQuery import BAN as ban
 
-client = commands.Bot(command_prefix="!")
+intent = discord.Intents.default()
+intent.typing = False
+intent.presences = False
+intent.members = True
+client = commands.Bot(command_prefix="#", intent = intent)
 queue = list()
 
 class Song :
@@ -202,17 +206,54 @@ async def delban(ctx, msg): #금지어목록 삭제
     else:
         await ctx.send("목록에 없습니다.")
 
+@client.command()
+async def unmute(ctx, name):
+    user = await ctx.guild.fetch_member(int(name[3:21]))
+    await ctx.channel.set_permissions(user,overwrite=None)
+    await ctx.send(str(user)+" unmute!")
+
+@client.command()
+async def banuserlist(ctx):
+    banuser, banusercount = ban.BANUSERREAD()
+    print('tasd')
+    for i in range(len(banuser)):
+        print(banuser[i],banusercount[i])
+        await ctx.send(banuser[i]+" "+str(banusercount[i]))
+
 @client.event
 async def on_message(ctx):
     banlist = ban.BANREAD()
-    if any([word in ctx.content for word in banlist]):#금지어 삭제 기능
-        if ctx.author == client.user:   #금지어 목록 출력을 위해 봇이 쓰는 금지어는 pass
-            pass
-        elif ctx.content.startswith(client.command_prefix+"delban"):#메세지 시작이 !delban명령어일 경우
-            await client.process_commands(ctx) #명령어 실행
-        else:   #봇 이외에 금지어를 사용하면 메세지를 삭제하고 경고문 출력
-            await ctx.delete()
-            await ctx.channel.send("That Word Is Not Allowed To Be Used! Continued Use Of Mentioned Word Would Lead To Punishment!")
+    user = ctx.author
+
+    if ctx.author != ctx.guild.owner:
+        if any([word in ctx.content for word in banlist]):#금지어 삭제 기능
+            if ctx.author == client.user:   #금지어 목록 출력을 위해 봇이 쓰는 금지어는 pass
+                pass
+            elif ctx.content.startswith(client.command_prefix+"delban"):#메세지 시작이 !delban명령어일 경우
+                await client.process_commands(ctx) #명령어 실행
+            else:   #봇 이외에 금지어를 사용하면 메세지를 삭제하고 경고문 출력
+                banuser, banusercount = ban.BANUSERREAD()
+                userstr = str(user)
+                print(userstr)
+                print(banusercount)
+                print(type(banusercount))
+                if userstr in banuser:
+                    print('실행')
+                    ban.BANUSERUPDATE(userstr,banusercount[banuser.index(userstr)])
+                    await ctx.channel.send(userstr+" ban count = "+str((banusercount[banuser.index(userstr)]+1)))
+
+                    if banusercount[banuser.index(userstr)]+1 > 4:
+                        await ctx.channel.set_permissions(user,send_messages=False)
+                        ban.BANUSERDELETE(userstr)
+                        await ctx.channel.send(userstr+"MUTE!")
+                else:
+                    ban.BANUSERINSERT(userstr, int(1))
+                    await ctx.channel.send(userstr+" ban count = "+ '1')
+
+                await ctx.delete()
+                await ctx.channel.send("That Word Is Not Allowed To Be Used! Continued Use Of Mentioned Word Would Lead To Punishment!")
+        else:
+            await client.process_commands(ctx)
     else:
         await client.process_commands(ctx)
 
