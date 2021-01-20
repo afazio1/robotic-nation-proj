@@ -173,15 +173,8 @@ async def stop(ctx):
 
 @client.command()
 async def comment(ctx, url:str):
-    reaction_list = ['\U00000031\U0000FE0F\U000020E3','\U00000032\U0000FE0F\U000020E3','\U00000033\U0000FE0F\U000020E3','\U00000034\U0000FE0F\U000020E3','\U00000035\U0000FE0F\U000020E3']
-    def chk_user(reaction, us):
-        if us==ctx.author:
-            if str(reaction.emoji) == reaction_list[0]:
-                return 0
-    print(url)
     #입력한 str이 url일 경우
     if url.find("youtube.com/watch") > -1:
-        print("test1")
         yt_id, yt_comment, yt_like = Crawling_YT_Comment(url)
         if len(yt_id)>10:
             yt_id, yt_comment, yt_like = yt_id[:10], yt_comment[:10], yt_like[:10]
@@ -195,11 +188,14 @@ async def comment(ctx, url:str):
 
     #입력한 str이 검색어일 경우
     else:
-        print("test2")
+        reaction_list = ['\U00000031\U0000FE0F\U000020E3','\U00000032\U0000FE0F\U000020E3','\U00000033\U0000FE0F\U000020E3','\U00000034\U0000FE0F\U000020E3','\U00000035\U0000FE0F\U000020E3']
+        def chk_user(reaction, us):
+            return us == ctx.author and reaction.message.id == re_msg.id
+        
         titles, hrefs = Crawling_YT_Title(url)
         emb1 = discord.Embed(title="Select the title", description = "Select the number", color=discord.Color.dark_blue())
         for i in range(len(titles)):
-            emb1.add_field(name="{}번".format(i), value="{}".format(titles[i]), inline=False)
+            emb1.add_field(name="{}번".format(i+1), value="{}".format(titles[i]), inline=False)
 
         #반응을 누르기위해 기본반응 추가
         re_msg = await ctx.send(embed=emb1)
@@ -208,13 +204,25 @@ async def comment(ctx, url:str):
 
         emb2 = discord.Embed(title="Youtube", description="" ,color=discord.Color.dark_blue())
         try:
-            reaction, r_user = await client.wait_for('reaction_add', timeout=30.0, check = chk_user)
+            reaction, _r_user = await client.wait_for('reaction_add', timeout=30.0, check = chk_user)
         except asyncio.TimeoutError:
             emb2.add_field(name="Time out", value="처음부터 다시 입력해주세요")
-            ctx.send(embed=emb)
+            ctx.send(embed=emb2)
             return
         else:
-            yt_id, yt_comment, yt_like = Crawling_YT_Comment(hrefs[1])
+            num = 0
+            if str(reaction) == reaction_list[0]:
+                num = 0
+            elif str(reaction) == reaction_list[1]:
+                num = 1
+            elif str(reaction) == reaction_list[2]:
+                num = 2
+            elif str(reaction) == reaction_list[3]:
+                num = 3
+            elif str(reaction) == reaction_list[4]:
+                num = 4
+
+            yt_id, yt_comment, yt_like = Crawling_YT_Comment(hrefs[num])
             if len(yt_id)>10:
                 yt_id, yt_comment, yt_like = yt_id[:10], yt_comment[:10], yt_like[:10]
             emb2 = discord.Embed(title="TOP 10 Comments",description="This is comment about {}".format(url),color=discord.Color.blue())
@@ -226,4 +234,4 @@ async def comment(ctx, url:str):
             await ctx.send(embed=emb2)
             return
 
-client.run('Nzk4NDY1MzE4MTEyNDYwODIw.X_1axg.hn-jftDZ4ss1RXsgeHLuCLMAYc0')
+client.run('Nzk4NDY1MzE4MTEyNDYwODIw.X_1axg.LgF5IwH0kzCiZK0Pncqe0Ngd0zk')
