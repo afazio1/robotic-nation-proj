@@ -6,6 +6,7 @@ c = conn.cursor()
 
 class BAN:  #금지어 목록 관리
     c.execute("CREATE TABLE IF NOT EXISTS BAN(NUM INTEGER PRIMARY KEY AUTOINCREMENT, WORD TEXT)")
+    c.execute("CREATE TABLE IF NOT EXISTS BANUSER(USER TEXT PRIMARY KEY, COUNT INTEGER)")
 
     def BANINSERT(msg): #금지어 추가 메서드
         c.execute("INSERT INTO BAN('WORD') VALUES(?)",[msg])
@@ -20,6 +21,25 @@ class BAN:  #금지어 목록 관리
     def BANDELETE(msg): #금지어 삭제 메서드
         c.execute("DELETE FROM BAN WHERE WORD = :WORD",{"WORD":msg})
     
+    def BANUSERINSERT(user, cnt):
+        c.execute("INSERT INTO BANUSER('USER','COUNT') VALUES(?,?)",(user, cnt))
+
+
+    def BANUSERREAD():
+        banuser=[]
+        banusercount=[]
+        for word in c.execute("SELECT * FROM BANUSER"):
+            banuserstr = list(word)
+            banuser.append(banuserstr[0])
+            banusercount.append(banuserstr[1])
+        return banuser, banusercount
+    
+    def BANUSERDELETE(user): 
+        c.execute("DELETE FROM BANUSER WHERE USER = :USER",{"USER":user})
+
+    def BANUSERUPDATE(user,cnt):
+        cnt=cnt+1
+        c.execute("UPDATE BANUSER SET COUNT = ? WHERE USER = ?", (cnt, user))
 
 #CREATE
 def CREATE() :
