@@ -2,28 +2,22 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 import time
 
+#pip install lxml
+#pip install beautifulsoup4
+#pip install selenium
 #exe파일 경로는 상대경로가 아닌 절대경로로 설정해야함.
 def Crawling_YT_Comment(comm):
     driver = webdriver.Chrome('C:/Users/BBAEK/Desktop/계절학기/Team Project/Discord_oss_project/projects/discord-bot/chromedriver.exe')
     url = comm
     driver.get(url)
 
-    last_page = driver.execute_script('return document.documentElement.scrollHeight')
+    driver.execute_script('return document.documentElement.scrollHeight')
+    #화면상 스크롤 위치 이동 : scrollTo(x,Y) ,scrollTo(x,Y+number)
+    #화면 최하단으로 스크롤 이동 : scrollTo(0, document.body.scrollHeight)
+    driver.execute_script("window.scrollTo(0,document.documentElement.scrollHeight);")
+    #Wait to load page
+    time.sleep(3)
 
-    for i in range(3):
-        #화면상 스크롤 위치 이동 : scrollTo(x,Y) ,scrollTo(x,Y+number)
-        #화면 최하단으로 스크롤 이동 : scrollTo(0, document.body.scrollHeight)
-        driver.execute_script("window.scrollTo(0,document.documentElement.scrollHeight);")
-        #Wait to load page
-        time.sleep(2)
-        #scroll height is last height? 
-        new_page = driver.execute_script("return document.documentElement.scrollHeight")
-
-        if new_page == last_page:
-            break
-        last_page = new_page
-
-    time.sleep(1)
     html_src = driver.page_source
     driver.close()
 
@@ -42,16 +36,27 @@ def Crawling_YT_Comment(comm):
         str_tmp = str_tmp.replace('\n', '')
         str_tmp = str_tmp.replace('\t', '')
         str_tmp = str_tmp.replace('                ', '')
+        str_tmp = str_tmp.strip()
+        if len(str_tmp)>100:
+            str_tmp = str_tmp[:100]
         youtube_Ids.append(str_tmp)
 
         str_tmp = str(yt_comment[i].text)
         str_tmp = str_tmp.replace('\n', '')
         str_tmp = str_tmp.replace('\t', '')
         str_tmp = str_tmp.replace('                ', '')
+        str_tmp = str_tmp.strip()
+        if len(str_tmp)>100:
+            str_tmp = str_tmp[:100] + "...too many words"
         youtube_comments.append(str_tmp)
 
         str_tmp = str(yt_like[i].text)
-        youtube_likes.append(int(str_tmp))
+        str_tmp = str_tmp.replace('\n', '')
+        str_tmp = str_tmp.replace('\t', '')
+        str_tmp = str_tmp.strip()
+        if len(str_tmp)>100:
+            str_tmp = str_tmp[:100]
+        youtube_likes.append(str_tmp)
 
     return youtube_Ids, youtube_comments, youtube_likes
 

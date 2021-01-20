@@ -2,11 +2,11 @@ import discord
 from discord.ext import commands
 import youtube_dl
 import os
+import asyncio
 from crawling_YT import Crawling_YT_Title, Crawling_YT_Comment
 
 client = commands.Bot(command_prefix="!")
 queue = list()
-comment_chk = False
 
 class Song :
     def __init__(self) :
@@ -174,24 +174,39 @@ async def stop(ctx):
 @client.command()
 async def comment(ctx, url:str):
     yt_id, yt_comment, yt_like = Crawling_YT_Comment(url)
+    def chk_user(chk):
+        return ctx.author == chk.author
+
     if len(yt_id)>10:
         yt_id, yt_comment, yt_like = yt_id[:10], yt_comment[:10], yt_like[:10]
-    
+
     if url.find("youtube.com/watch"):
         emb = discord.Embed(title="TOP 10 Comments",description="This is comment about {}".format(url),color=discord.Color.blue())
         emb.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
         for i in range(len(yt_id)):
             emb.add_field(name="{} (🧡{})".format(yt_id[i], yt_like[i]), value="{}".format(yt_comment[i]),inline=False)
-        else:
+        if len(yt_id)==0:
             emb.add_field(name="Error or No comment", value="Please check the url")
         await ctx.send(embed=emb)
 
     else:
         titles, hrefs = Crawling_YT_Title(str)
-        emb = discord.Embed(title="Select the title", description = "Typing the number", color=discord.Color.dark_blue())
+        emb1 = discord.Embed(title="Select the title", description = "Typing the number", color=discord.Color.dark_blue())
         for i in range(len(titles)):
-            emb.add_field(name="{}번".format(i), value="{}".format(titles[i]), inline=False)
-        comment_queue = True
-        await ctx.send(embed=emb)
+            emb1.add_field(name="{}번".format(i), value="{}".format(titles[i]), inline=False)
 
-client.run('Nzk4NDY1MzE4MTEyNDYwODIw.X_1axg.vPkSAskjdOBrW1jo_lhuGKXvxLE')
+        await ctx.send(embed=emb1)
+
+        emb2 = discord.Embed(title="", description="" ,color=discord.Color.dark_blue())
+        try:
+            tmp = await client.wait_for('message', timeout=30.0, check = chk_user)
+        except asyncio.TimeoutError:
+            emb.add_field(name="Time out", value="처음부터 다시 입력해주세요")
+            ctx.send(embed=emb)
+            return
+        else:
+            pass
+
+        
+
+client.run('Nzk4NDY1MzE4MTEyNDYwODIw.X_1axg.lUUKCvJ0wbow3qxLPlmauKROOvY')
