@@ -4,8 +4,8 @@ import pprint
 import sys
 
 def fetch() :
-    client_id = "YOUR_CLIENT_ID"
-    client_secret = "YOUR_CLIENT_SECRET"
+    client_id = "YOUR_CLIENT_ID"    #YOUR_CLIENT_ID
+    client_secret = "YOUR_CLIENT_SECRET"    #YOUR_CLIENT_SECRET
 
     import dbQuery as query
     lz_uri = query.RETRIEVE()

@@ -47,10 +47,13 @@ def CREATE() :
 
 #READ
 def READ() :
-    i = 0
-    for row in c.execute("SELECT * FROM ARTIST") :
-        print("Record #{} : {}" .format(i, row))
+    i = 1
+    buf = str()
+    for row in c.execute("SELECT NAME FROM ARTIST") :
+        buf = buf + '[' + str(i) + ']' + ' ' + ''.join(row) + '\n'
         i += 1
+    print(buf)
+    return buf
 
 #UPDATE
 def UPDATE() :
