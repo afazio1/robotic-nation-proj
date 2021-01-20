@@ -14,6 +14,7 @@ url_queue = list()
 searched_title = list()
 searched_url = list()
 timer = time()
+now_playing = str()
 
 class Song :
     def __init__(self) :
@@ -32,7 +33,7 @@ class Song :
             if song_there :
                 os.remove("song.mp3")
         except PermissionError:
-            return
+            print("PermissionError occurd while deletion")
 
         with youtube_dl.YoutubeDL(self.ydl_opts) as ydl:
             ydl.download([url])
@@ -47,6 +48,28 @@ class Song :
     def do_both(self, url) :
         self.download_song(url)
         return self.get_title(url)
+
+class Song_player :
+    def play_song(self, voice, title) :
+        # now_playing = song    #unused variable
+        temp = Song()
+        # Crawling_YT_Title.
+        temp.download_song(title)
+        video_title = temp.get_title(title)
+        queue.insert(0, video_title)
+        Crawling_YT_Title(title)
+        url_queue.insert(0, )
+
+        def after_playing(err) :
+            if len(queue) > 0 :
+                del queue[0]
+                next_song = queue[0]
+                self.play_song(voice, next_song)
+            else :
+                msg = 'Playlist is empty'
+                return msg
+
+        voice.play(discord.FFmpegPCMAudio("song.mp3"), after = after_playing)
 
 @client.command()
 async def q(ctx) :
@@ -136,24 +159,28 @@ async def play(ctx, input : str = '') :
             raise ValueError
         elif converted_input >= 1 and converted_input <= 5 :
             input_is_valid_num = True
-            selection = converted_input
+            # selection = converted_input
     except ValueError :
         pass
     
     if connection_state is True and not voice.is_playing() :                    #봇이 음성채널에 연결됨 && 음악 재생중이 아님
         if input_is_valid_num is False :                                        #사용자의 메시지가 1부터 5의 값이 아닌 경우, 즉 제목을 입력한 경우 -> input값을 title인자로 넘겨 유튜브 검색 상위 5개 검색결과 가져옴
+            await ctx.send('166번 라인')
             buf = youtube_search(ctx, input)
             await ctx.send(buf)
         else :                                                                  #사용자의 메시지가 1부터 5의 값인 경우 -> class Song(기존 파일 삭제, 번호에 맞는 음악 다운로드), method play(재생), nowplaying()
+            await ctx.send('170번 라인')
             song_manager = Song()
-            video_url = searched_url[input-1]
-            video_title = song_manager.do_both(video_url)
             queue.clear()
-            queue.append(video_title)
+            url_queue.clear()
+            player = Song_player()
+            player.play_song(voice, searched_url[int(converted_input)-1])
+            queue.append('title')   #title 삽입
+            url_queue.append('url') #url 삽입
 
-            voice.play(discord.FFmpegPCMAudio("song.mp3"))
-            timer.set_song_length(MP3("song.mp3").info.length)
-            await song_ended()
+            # voice.play(discord.FFmpegPCMAudio("song.mp3"))
+            # timer.set_song_length(MP3("song.mp3").info.length)
+            # await song_ended()
             #재활용 대기
             # del queue[0]
             # if queue :
@@ -166,59 +193,80 @@ async def play(ctx, input : str = '') :
             #     await ctx.send("Queue is empty")
     elif connection_state is True and not voice.is_playing() and not queue :    #봇이 음성채널에 연결됨 && 음악 재생중이 아님 && 큐가 비어있음 -> 음성채널에 연결, 다운로드, 재생, 재생중인 곡 타이틀 알려줌
         if input_is_valid_num is False :                                        #사용자의 메시지가 1부터 5의 값이 아닌 경우, 즉 제목을 입력한 경우 -> input값을 title인자로 넘겨 유튜브 검색 상위 5개 검색결과 가져옴
+            await ctx.send('191번 라인')
             youtube_search(ctx, input)
         else :                                                                  #사용자의 메시지가 1부터 5의 값인 경우 -> class Song(기존 파일 삭제, 번호에 맞는 음악 다운로드), connect, method play(재생), nowplaying()
+            await ctx.send('194번 라인')
             song_manager = Song()
             video_title = song_manager.do_both(searched_url[converted_input-1])
             queue.clear()
-            queue.append(video_title)
+            url_queue.clear()
+            # queue.append(video_title)
+            
 
             await voiceChannel.connect()
-            voice.play(discord.FFmpegPCMAudio("song.mp3"))
+            player = Song_player()
+            player.play_song(voice, searched_url[int(converted_input)-1])
+            # voice.play(discord.FFmpegPCMAudio("song.mp3"))
             await ctx.send("Now playing : {}" .format(str(queue[0])))
-    elif connection_state is True and not voice.is_playing() and queue :        #봇이 음성채널에 연결됨 && 음악 재생중이 아님 && 큐가 비어있지 않음 -> queue에서 가져옴, 다운로드, 재생, 재생중인 곡 타이틀 알려줌
-        await ctx.send(Crawling_YT_Title(queue[0]))                             #queue의 첫 번째 원소를 Youtube에 검색해 상위 5개의 결과를 메시지로 리턴함
+    elif connection_state is True and not voice.is_playing() and queue :        #봇이 음성채널에 연결됨 && 음악 재생중이 아님 && 큐가 비어있지 않음 -> 큐에서 가져옴, 다운로드, 재생, 재생중인 곡 타이틀 알려줌
+        await ctx.send('207번 라인')
+        await ctx.send(Crawling_YT_Title(queue[0]))                             #큐의 첫 번째 원소를 Youtube에 검색해 상위 5개의 결과를 메시지로 리턴함
         if input_is_valid_num is False :                                        #사용자의 메시지가 1부터 5의 값이 아닌 경우, 즉 제목을 입력한 경우 -> input값을 title인자로 넘겨 유튜브 검색 상위 5개 검색결과 가져옴
             youtube_search(ctx, input)
+            
         else :                                                                  #사용자의 메시지가 1부터 5의 값인 경우 -> class Song(기존 파일 삭제, 번호에 맞는 음악 다운로드), method play(재생), nowplaying()
+            await ctx.send('213번 라인')
             song_manager = Song()
             video_title = song_manager.do_both(searched_url[converted_input-1])
             queue.clear()
-            queue.append(video_title)
+            url_queue.clear()
+            # queue.append(video_title)
 
-            voice.play(discord.FFmpegPCMAudio("song.mp3"))
-            timer.set_song_length(MP3("song.mp3").info.length)
+            # voice.play(discord.FFmpegPCMAudio("song.mp3"))
+            # timer.set_song_length(MP3("song.mp3").info.length)
+            player = Song_player()
+            player.play_song(voice, searched_url[int(converted_input)-1])
             await ctx.send("Now playing : {}" .format(str(queue[0])))
-            while any([await timer.end_flag == False]) :
-                pass
-            del queue[0]
-            if queue :
-                video_title = queue[0]
-                queue.append(video_title)
-                voice.play(discord.FFmpegPCMAudio("song.mp3"))
-                timer.set_song_length(MP3("song.mp3").info.length)
-                await ctx.send("Now playing : {}" .format(str(queue[0])))
-            else :  #queue is empty
-                await ctx.send("Queue is empty")
+            # while any([await timer.end_flag == False]) :
+            #     pass
+            # del queue[0]
+            # if queue :
+            #     video_title = queue[0]
+            #     queue.append(video_title)
+            #     voice.play(discord.FFmpegPCMAudio("song.mp3"))
+            #     timer.set_song_length(MP3("song.mp3").info.length)
+            #     await ctx.send("Now playing : {}" .format(str(queue[0])))
+            # else :  #queue is empty
+            #     await ctx.send("Queue is empty")
+    elif connection_state is True and voice.is_playing() :                      #봇이 음성채널에 연결됨 && 음악 재생중 -> 큐에 추가함
+        if input_is_valid_num is False :                                        #사용자의 메시지가 1부터 5의 값이 아닌 경우, 즉 제목을 입력한 경우 -> input값을 title인자로 넘겨 유튜브 검색 상위 5개 검색결과 가져옴
+            await ctx.send('237번 라인')
+            buf = youtube_search(ctx, input)
+            await ctx.send(buf)
+        else :                                                                  #사용자의 메시지가 1부터 5의 값인 경우 -> class Song(기존 파일 삭제, 번호에 맞는 음악 다운로드), connect, method play(재생), nowplaying()
+            await ctx.send('241번 라인')
+            song_manager = Song()
+            song_manager.get_title(searched_url[converted_input])
+            queue.append(video_title)
+            url_queue.append(searched_url[converted_input-1])
     elif connection_state is False :
         queue.clear()
         await voiceChannel.connect()
         voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
         if input_is_valid_num is False :                                        #사용자의 메시지가 1부터 5의 값이 아닌 경우, 즉 제목을 입력한 경우 -> input값을 title인자로 넘겨 유튜브 검색 상위 5개 검색결과 가져옴
+            await ctx.send('251번 라인')
             buf = youtube_search(ctx, input)
             await ctx.send(buf)
         else :                                                                  #사용자의 메시지가 1부터 5의 값인 경우 -> class Song(기존 파일 삭제, 번호에 맞는 음악 다운로드), connect, method play(재생), nowplaying()
+            await ctx.send('268번 라인')
+            print('converted_input', converted_input)
             song_manager = Song()
-            video_title = song_manager.do_both(searched_url[converted_input-1])
-            queue.clear()
-            queue.append(video_title)
-            
-            song_manager = Song()
-            video_title = song_manager.do_both(searched_url[converted_input-1])
-            queue.clear()
+            song_manager.get_title(searched_url[converted_input])
             queue.append(video_title)
 
-            voice.play(discord.FFmpegPCMAudio("song.mp3"))
+            player = Song_player()
+            player.play_song(voice, searched_url[int(converted_input)])
             await ctx.send("Now playing : {}" .format(str(queue[0])))
 
 
@@ -301,15 +349,10 @@ async def nowplaying(ctx) :
 
 @client.command()
 async def leave(ctx):
-    # voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
-    # if voice.is_connected():
-    #     await voice.disconnect()
-    # else:
-    #     await ctx.send("The bot is not connected to a voice channel.")
-
     voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
     if client.voice_clients :
         await voice.disconnect()
+        os.remove("song.mp3")
     else :
         await ctx.send("The bot is not connected to a voice channel.")
 
@@ -374,4 +417,4 @@ async def comment(ctx, url:str):
 
         
 
-client.run('YOUR_TOKEN')    #YOUR_TOKEN
+client.run('Song_player')    #YOUR_TOKEN
