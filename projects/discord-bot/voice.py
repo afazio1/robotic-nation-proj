@@ -207,53 +207,44 @@ async def delban(ctx, msg): #금지어목록 삭제
         await ctx.send("목록에 없습니다.")
 
 @client.command()
-async def unmute(ctx, name):
-    user = await ctx.guild.fetch_member(int(name[3:21]))
-    await ctx.channel.set_permissions(user,overwrite=None)
+async def unmute(ctx, name):#채팅밴 언뮤트 명령어
+    user = await ctx.guild.fetch_member(int(name[3:21])) #입력한 멘션아이디에서 멤버 아이디만 슬라이싱
+    await ctx.channel.set_permissions(user,overwrite=None) #슬라이싱한 멤버아이디로 언뮤트
     await ctx.send(str(user)+" unmute!")
 
 @client.command()
-async def banuserlist(ctx):
-    banuser, banusercount = ban.BANUSERREAD()
-    print('tasd')
-    for i in range(len(banuser)):
-        print(banuser[i],banusercount[i])
-        await ctx.send(banuser[i]+" "+str(banusercount[i]))
+async def banuserlist(ctx): #채팅벤 데이터베이스 출력 명령어
+    banuser, banusercount = ban.BANUSERREAD()   #데이터베이스 읽어오기
+    for i in range(len(banuser)):       #가져온 데이터베이스 만큼 반복
+        await ctx.send(banuser[i]+" "+str(banusercount[i])) #유저 밴카운트 출력
 
 @client.event
 async def on_message(ctx):
     banlist = ban.BANREAD()
     user = ctx.author
+    
+    if any([word in ctx.content for word in banlist]):#금지어 삭제 기능
+        if ctx.author == client.user:   #금지어 목록 출력을 위해 봇이 쓰는 금지어는 pass
+            pass
+        elif ctx.content.startswith(client.command_prefix+"delban"):#메세지 시작이 !delban명령어일 경우
+            await client.process_commands(ctx) #명령어 실행
+        else:   #봇 이외에 금지어를 사용하면 메세지를 삭제하고 경고문 출력
+            banuser, banusercount = ban.BANUSERREAD()   #채팅밴 데이터베이스 읽어오기
+            userstr = str(user) #멤버형 변수는 사용하기 까다롭기때문에 문자열로 변환
+            if userstr in banuser:  #금지어를 사용한멤버가 데이터베이스에 있다면(2번이상 사용자)
+                ban.BANUSERUPDATE(userstr,banusercount[banuser.index(userstr)])#업데이트 명령어
+                await ctx.channel.send(userstr+" ban count = "+str((banusercount[banuser.index(userstr)]+1)))
 
-    if ctx.author != ctx.guild.owner:
-        if any([word in ctx.content for word in banlist]):#금지어 삭제 기능
-            if ctx.author == client.user:   #금지어 목록 출력을 위해 봇이 쓰는 금지어는 pass
-                pass
-            elif ctx.content.startswith(client.command_prefix+"delban"):#메세지 시작이 !delban명령어일 경우
-                await client.process_commands(ctx) #명령어 실행
-            else:   #봇 이외에 금지어를 사용하면 메세지를 삭제하고 경고문 출력
-                banuser, banusercount = ban.BANUSERREAD()
-                userstr = str(user)
-                print(userstr)
-                print(banusercount)
-                print(type(banusercount))
-                if userstr in banuser:
-                    print('실행')
-                    ban.BANUSERUPDATE(userstr,banusercount[banuser.index(userstr)])
-                    await ctx.channel.send(userstr+" ban count = "+str((banusercount[banuser.index(userstr)]+1)))
+                if banusercount[banuser.index(userstr)]+1 > 4: #밴카운트가 5번 이상
+                    await ctx.channel.set_permissions(user,send_messages=False) #채팅금지(MUTE)
+                    ban.BANUSERDELETE(userstr)  #채팅금지 후 데이터베이스에서 삭제
+                    await ctx.channel.send(userstr+"MUTE!")
+            else:
+                ban.BANUSERINSERT(userstr, int(1)) #금지어 사용이 처음인경우 데이터베이스 삽입
+                await ctx.channel.send(userstr+" ban count = "+ '1')
 
-                    if banusercount[banuser.index(userstr)]+1 > 4:
-                        await ctx.channel.set_permissions(user,send_messages=False)
-                        ban.BANUSERDELETE(userstr)
-                        await ctx.channel.send(userstr+"MUTE!")
-                else:
-                    ban.BANUSERINSERT(userstr, int(1))
-                    await ctx.channel.send(userstr+" ban count = "+ '1')
-
-                await ctx.delete()
-                await ctx.channel.send("That Word Is Not Allowed To Be Used! Continued Use Of Mentioned Word Would Lead To Punishment!")
-        else:
-            await client.process_commands(ctx)
+            await ctx.delete()
+            await ctx.channel.send("That Word Is Not Allowed To Be Used! Continued Use Of Mentioned Word Would Lead To Punishment!")
     else:
         await client.process_commands(ctx)
 

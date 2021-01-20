@@ -21,24 +21,24 @@ class BAN:  #금지어 목록 관리
     def BANDELETE(msg): #금지어 삭제 메서드
         c.execute("DELETE FROM BAN WHERE WORD = :WORD",{"WORD":msg})
     
-    def BANUSERINSERT(user, cnt):
+    def BANUSERINSERT(user, cnt): #채팅밴 추가 메서드
         c.execute("INSERT INTO BANUSER('USER','COUNT') VALUES(?,?)",(user, cnt))
 
 
-    def BANUSERREAD():
+    def BANUSERREAD():  #채팅밴 목록 호출 메서드
         banuser=[]
         banusercount=[]
         for word in c.execute("SELECT * FROM BANUSER"):
-            banuserstr = list(word)
+            banuserstr = list(word) #데이터베이스를 리스트형태로 받아 유저와 밴카운트를 나눠서 리턴
             banuser.append(banuserstr[0])
             banusercount.append(banuserstr[1])
         return banuser, banusercount
     
-    def BANUSERDELETE(user): 
+    def BANUSERDELETE(user): #채팅밴 삭제 메서드
         c.execute("DELETE FROM BANUSER WHERE USER = :USER",{"USER":user})
 
-    def BANUSERUPDATE(user,cnt):
-        cnt=cnt+1
+    def BANUSERUPDATE(user,cnt):    #채팅밴 업데이트 메서드
+        cnt=cnt+1   #업데이트마다 밴카운트 1 증가
         c.execute("UPDATE BANUSER SET COUNT = ? WHERE USER = ?", (cnt, user))
 
 #CREATE
