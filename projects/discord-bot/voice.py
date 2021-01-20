@@ -12,7 +12,6 @@ queue = list()           #현재 큐안의 제목
 url_queue = list()       #현재 큐안의 url
 searched_title = list()  #검색 리스트 5개
 searched_url = list()    #검색 리스트 5개
-now_play = ""
 
 class Song :
     def __init__(self) :
@@ -118,11 +117,13 @@ async def play(ctx, input : str = '') :
     def after_song(err):
         if len(queue) > 0:
             next_song = url_queue.pop(0)
-            now_play = queue.pop(0)
+            queue.pop(0)
             song_manager = Song()
             _video_title = song_manager.do_both(next_song)
             voice.play(discord.FFmpegPCMAudio("song.mp3"), after=after_song)
         else:
+            url_queue.pop(0)
+            queue.pop(0)
             return
 
     voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
@@ -133,7 +134,6 @@ async def play(ctx, input : str = '') :
             raise ValueError
         elif converted_input >= 1 and converted_input <= 5 :
             input_is_valid_num = True
-            selection = converted_input
     except ValueError :
         pass
     
@@ -216,7 +216,7 @@ async def play(ctx, input : str = '') :
 @client.command()
 async def nowplaying(ctx) :
     if queue :
-        await ctx.send("Now playing : {}" .format(now_play))
+        await ctx.send("Now playing : {}" .format(str(queue[0])))
     else :
         await ctx.send("Queue is empty")
 
@@ -323,4 +323,4 @@ async def comment(ctx, url:str):
             await ctx.send(embed=emb2)
             return
 
-client.run('Nzk4NDY1MzE4MTEyNDYwODIw.X_1axg.eZttz7QQ-I3sjFE8vuI8MKA3fyY')
+client.run('token')
