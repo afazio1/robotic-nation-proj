@@ -12,6 +12,7 @@ queue = list()           #현재 큐안의 제목
 url_queue = list()       #현재 큐안의 url
 searched_title = list()  #검색 리스트 5개
 searched_url = list()    #검색 리스트 5개
+now_play = ""
 
 class Song :
     def __init__(self) :
@@ -46,6 +47,7 @@ class Song :
         self.download_song(url)
         return self.get_title(url)
 
+
 @client.command()
 async def q(ctx) :
     buf = str()
@@ -58,12 +60,14 @@ async def q(ctx) :
     else :
         await ctx.send("Queue is empty")
 
+
 @client.command()
 async def artist(ctx) :
     import dbQuery
     buf = 'List of artists in DB'
     buf += dbQuery.READ()
     await ctx.send(buf)
+
 
 @client.command()
 async def auto(ctx, name : str = '') :
@@ -79,6 +83,7 @@ async def auto(ctx, name : str = '') :
         buf = buf + '[' + str(i) + ']' + ' ' + var + '\n'
         i += 1
     await ctx.send(buf)
+
 
 @client.command()
 async def is_connected(ctx) :
@@ -100,22 +105,6 @@ def youtube_search(ctx, title) :
         i += 1
     return buf
 
-# def play_infinite() :
-#     if len(queue) > 1 :
-#         del queue[0]
-#         del url_queue[0]
-#         song_manager = Song()
-#         video_title = song_manager.do_both(url_queue[0])
-#         queue.append(video_title)
-#         return True
-#     else :
-#         return False
-
-# async def song_ended() :
-#     while any([await timer.end_flag == False]) :
-#         return
-#     play_infinite()
-
 
 @client.command()
 async def play(ctx, input : str = '') :
@@ -126,18 +115,15 @@ async def play(ctx, input : str = '') :
     if client.voice_clients :                   #봇이 음성채널에 있으면 connection_state를 True로 변경
         connection_state = True
 
-    def after_song():
-        if len(url_queue) > 0:
-            print("test0")
+    def after_song(err):
+        if len(queue) > 0:
             next_song = url_queue.pop(0)
+            now_play = queue.pop(0)
             song_manager = Song()
             _video_title = song_manager.do_both(next_song)
-            voice.play(discord.FFmpegPCMAudio("song.mp3"), after=after_song())
-            print("test1")
+            voice.play(discord.FFmpegPCMAudio("song.mp3"), after=after_song)
         else:
-            print("test2")
             return
-
 
     voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
     
@@ -162,7 +148,7 @@ async def play(ctx, input : str = '') :
             queue.clear()
             queue.append(video_title)
 
-            voice.play(discord.FFmpegPCMAudio("song.mp3"), after=after_song())
+            voice.play(discord.FFmpegPCMAudio("song.mp3"), after=after_song)
             
     elif connection_state is True and not voice.is_playing() and not queue :    #봇이 음성채널에 연결됨 && 음악 재생중이 아님 && 큐가 비어있음 -> 음성채널에 연결, 다운로드, 재생, 재생중인 곡 타이틀 알려줌
         if input_is_valid_num is False :                                        #사용자의 메시지가 1부터 5의 값이 아닌 경우, 즉 제목을 입력한 경우 -> input값을 title인자로 넘겨 유튜브 검색 상위 5개 검색결과 가져옴
@@ -174,7 +160,7 @@ async def play(ctx, input : str = '') :
             queue.append(video_title)
 
             await voiceChannel.connect()
-            voice.play(discord.FFmpegPCMAudio("song.mp3"), after=after_song())
+            voice.play(discord.FFmpegPCMAudio("song.mp3"), after=after_song)
             await ctx.send("Now playing : {}" .format(str(queue[0])))
 
     elif connection_state is True and not voice.is_playing() and queue :        #봇이 음성채널에 연결됨 && 음악 재생중이 아님 && 큐가 비어있지 않음 -> queue에서 가져옴, 다운로드, 재생, 재생중인 곡 타이틀 알려줌
@@ -184,10 +170,11 @@ async def play(ctx, input : str = '') :
         else :                                                                  #사용자의 메시지가 1부터 5의 값인 경우 -> class Song(기존 파일 삭제, 번호에 맞는 음악 다운로드), method play(재생), nowplaying()
             song_manager = Song()
             video_title = song_manager.do_both(searched_url[converted_input-1])
-            queue.clear()
+            video_url = searched_url[int(input)-1]
             queue.append(video_title)
+            url_queue.append(video_url)
 
-            voice.play(discord.FFmpegPCMAudio("song.mp3"), after=after_song())
+            voice.play(discord.FFmpegPCMAudio("song.mp3"), after=after_song)
             await ctx.send("Now playing : {}" .format(str(queue[0])))
 
             if not queue :  #queue is empty
@@ -211,7 +198,7 @@ async def play(ctx, input : str = '') :
             queue.clear()
             queue.append(video_title)
 
-            voice.play(discord.FFmpegPCMAudio("song.mp3"), after=after_song())
+            voice.play(discord.FFmpegPCMAudio("song.mp3"), after=after_song)
             await ctx.send("Now playing : {}" .format(str(queue[0])))
 
     elif voice.is_playing():
@@ -223,86 +210,15 @@ async def play(ctx, input : str = '') :
             video_url = searched_url[int(input)-1]
             video_title = song_manager.do_both(video_url)
             url_queue.append(video_url)
-            queue.clear()
             queue.append(video_title)
 
-
-
-# @client.command()
-# async def newplay(ctx, url : str):
-#     voiceChannel = ctx.author.voice.channel
-    
-#     connection_state = False
-#     # if client.voice_clients :
-#     #     connection_state = True
-    
-#     voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
-    
-#     if connection_state is True and not voice.is_playing() :    #기존 파일 삭제, 다운로드, 재생, nowplaying()
-#         song_manager = Song()
-#         song_manager.download_song(url)
-#         video_title = song_manager.get_title(url)
-#         voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
-#         voice.play(discord.FFmpegPCMAudio("song.mp3"))
-#         queue.append(video_title)
-#         await ctx.send("Now playing : {}" .format(str(queue[0]))) 
-#     elif connection_state is True and voice.is_playing() :
-#         song_manager = Song()
-#         new_song_title = song_manager.get_title(url)
-#         queue.append(new_song_title)
-#         await ctx.send("Now playing : {}" .format(str(queue[0])))
-#         await ctx.send("Added new song : {}" .format(new_song_title))
-#     elif connection_state is False :                            #음성채널 연결, 다운로드, 재생
-#         await voiceChannel.connect()
-#         voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
-#         song_manager = Song()
-#         song_manager.download_song(url)
-#         video_title = song_manager.get_title(url)
-#         voice.play(discord.FFmpegPCMAudio("song.mp3"))
-#         queue.append(video_title)
-#         await ctx.send("Now playing : {}" .format(str(queue[0])))
-    
 
 @client.command()
 async def nowplaying(ctx) :
     if queue :
-        await ctx.send("Now playing : {}" .format(str(queue[0])))
+        await ctx.send("Now playing : {}" .format(now_play))
     else :
         await ctx.send("Queue is empty")
-
-# @client.command()
-# async def play(ctx, url : str):
-#     song_there = os.path.isfile("song.mp3")
-#     try:
-#         if song_there:
-#             os.remove("song.mp3")
-#     except PermissionError:
-#         await ctx.send("Wait for the current playing music to end or use the 'stop' command")
-#         return
-
-#     # voiceChannel = discord.utils.get(ctx.guild.voice_channels, name='General')
-#     voiceChannel = ctx.author.voice.channel
-#     await voiceChannel.connect()
-#     voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
-
-#     ydl_opts = {
-#         'format': 'bestaudio/best',
-#         'postprocessors': [{
-#             'key': 'FFmpegExtractAudio',
-#             'preferredcodec': 'mp3',
-#             'preferredquality': '192',
-#         }],
-#     }
-#     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-#         ydl.download([url])
-#         info_dict = ydl.extract_info(url, download=False)
-#         video_title = info_dict.get('title', None)
-#         queue.append(video_title)
-#     for file in os.listdir("./"):
-#         if file.endswith(".mp3"):
-#             os.rename(file, "song.mp3")
-#     voice.play(discord.FFmpegPCMAudio("song.mp3"))
-#     nowplaying(ctx)
 
 
 @client.command()
@@ -318,6 +234,7 @@ async def leave(ctx):
         await voice.disconnect()
     else :
         await ctx.send("The bot is not connected to a voice channel.")
+
 
 @client.command()
 async def pause(ctx):
@@ -341,6 +258,7 @@ async def resume(ctx):
 async def stop(ctx):
     voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
     voice.stop()
+
 
 @client.command()
 async def comment(ctx, url:str):
@@ -405,4 +323,4 @@ async def comment(ctx, url:str):
             await ctx.send(embed=emb2)
             return
 
-client.run('Nzk4NDY1MzE4MTEyNDYwODIw.X_1axg.0wTMLgLBXgNcV0MeV4vv2mEYALc')
+client.run('Nzk4NDY1MzE4MTEyNDYwODIw.X_1axg.eZttz7QQ-I3sjFE8vuI8MKA3fyY')
