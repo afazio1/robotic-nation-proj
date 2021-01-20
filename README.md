@@ -7,4 +7,5 @@ Requirement
 
 - 자신에게 맞는 chromedriver.exe
 - selenium library
-- Beautifulsoup library
+- Beautifulsoup4 library
+- lxml library
