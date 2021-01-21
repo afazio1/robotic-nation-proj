@@ -91,7 +91,7 @@ async def artist(ctx) :
     await ctx.send(buf)
 
 
-#자동재생 - Spotify의 API를 이용해 Artist의 Top10 음악을 큐에 저장 및 재생
+#자동재생 - Spotify의 API를 이용해 Artist의 Top3 음악을 큐에 저장 및 재생
 @client.command(
     help="!auto #  으로 사용 #= artist",
 	brief="#에 대한 노래를 틀어주는 기능(spotify에서 불러옴) "
@@ -540,4 +540,4 @@ async def comment(ctx, url:str = "No_Entered"):
                 emb2.add_field(name="Error or No comment", value="Please check the url")
             await ctx.send(embed=emb2)
 
-client.run('Nzk4NDY1MzE4MTEyNDYwODIw.X_1axg.CTL2ythIt1lp7rv93k8_n_YK2Vg')
+client.run('your_token')
