@@ -92,6 +92,13 @@ def READ() :
     print(buf)
     return buf
 
+#READ - for Discord
+def READ_FOR_DISCORD() :
+    ret = list()
+    for row in c.execute("SELECT NAME FROM ARTIST") :
+        ret.append(''.join(row))
+    return ret
+
 #UPDATE
 def UPDATE() :
     NAME = input("Enter Target Artist Name : ")
@@ -102,7 +109,6 @@ def UPDATE() :
 #DELETE
 def DELETE() :
     INPUT_NAME = input("Enter Target Artist Name : ")
-    # c.execute("DELETE URI FROM ARTIST WHERE NAME = :NAME", {"NAME" : INPUT_NAME})
     deleted_rows = conn.execute("DELETE URI FROM ARTIST WHERE NAME = :NAME", {"NAME" : INPUT_NAME}).rowcount
     if deleted_rows > 0 :
         print("Deletion Completed. {} rows" .format(deleted_rows))
@@ -112,6 +118,17 @@ def DELETE() :
 #RETRIEVE
 def RETRIEVE() :
     INPUT_NAME = input("Enter Target Artist Name : ")
+    c.execute("SELECT URI FROM ARTIST WHERE NAME = :NAME", {"NAME" : INPUT_NAME})
+    RSLT = c.fetchone()
+    if RSLT :
+        print(RSLT[0])
+        return RSLT[0]
+    else :
+        print("No results found")
+        return 'N/A'
+
+#RETRIEVE - for Discord
+def RETRIEVE_FOR_DISCORD(INPUT_NAME) :
     c.execute("SELECT URI FROM ARTIST WHERE NAME = :NAME", {"NAME" : INPUT_NAME})
     RSLT = c.fetchone()
     if RSLT :

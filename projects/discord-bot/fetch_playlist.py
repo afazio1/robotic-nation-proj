@@ -3,12 +3,12 @@ import spotipy
 import pprint
 import sys
 
-def fetch() :
+def fetch(artist_name) :
     client_id = "YOUR_CLIENT_ID"    #YOUR_CLIENT_ID
     client_secret = "YOUR_CLIENT_SECRET"    #YOUR_CLIENT_SECRET
 
     import dbQuery as query
-    lz_uri = query.RETRIEVE()
+    lz_uri = query.RETRIEVE_FOR_DISCORD(artist_name)
     if lz_uri == 'N/A' :
         print("Exiting..")
         sys.exit()
@@ -20,12 +20,7 @@ def fetch() :
 
     playlist = list()
 
-    # get top 10 tracks
-    for track in results['tracks'][:10]:
-        # print('track    : ' + track['name'])
-        # print('audio    : ' + track['preview_url'])
-        # print('cover art: ' + track['album']['images'][0]['url'])
-        # print()
+    # get top 3 tracks
+    for track in results['tracks'][:3]:
         playlist.append(track['name'])
-    
     return playlist
