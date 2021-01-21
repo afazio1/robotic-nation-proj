@@ -412,4 +412,4 @@ async def comment(ctx, url:str):
             await ctx.send(embed=emb2)
             return
 
-client.run('token')
+client.run('tokend')
