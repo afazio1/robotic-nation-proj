@@ -2,16 +2,22 @@ import discord
 from discord.ext import commands
 import youtube_dl
 import os
-# from dbQuery import BAN as ban
+from dbQuery import BAN as ban
 import asyncio
 from crawling_YT import Crawling_YT_Title, Crawling_YT_Comment
 from mutagen.mp3 import MP3
 
-client = commands.Bot(command_prefix=";")
+intent = discord.Intents.default()
+intent.typing = False
+intent.presences = False
+intent.members = True
+
+client = commands.Bot(command_prefix="!", intent = intent)
 queue = list()           #현재 큐안의 제목 
 url_queue = list()       #현재 큐안의 url
 searched_title = list()  #검색 리스트 5개
 searched_url = list()    #검색 리스트 5개
+
 
 class Song :
     def __init__(self) :
@@ -58,6 +64,7 @@ async def q(ctx) :
         await ctx.send("Queue list\n{}" .format(buf))
     else :
         await ctx.send("Queue is empty")
+
 
 
 @client.command()
@@ -259,6 +266,88 @@ async def stop(ctx):
     voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
     voice.stop()
 
+@client.command() #채팅채널 메세지 삭제 커맨드
+async def clear(ctx, amount):
+    await ctx.channel.purge(limit=int(amount)+1)#삭제 커맨트 인자 수 만큼 삭제+삭제커맨드메세지 포함 하여 삭제(+1)
+
+@client.command()
+async def banlist(ctx):#금지어 목록 출력 커맨드
+    banlist = ban.BANREAD() #dbQuery.py의 BAN클래스 에 정의된 BANREAD() 호출 BAN 테이블에 저장된 금지어 목록리턴
+    if banlist != []: #데이터베이스의 금지어 목록이 비어있는지 확인
+        await ctx.send(banlist)#지정된 금지어 리스트 출력
+    else:
+        await ctx.send("banlist's empty")
+
+@client.command()
+async def addban(ctx, msg): #금지어목록 추가
+    banlist = ban.BANREAD() #데이터베이스의 금지어 목록을 가져옴
+    if msg in banlist:      #추가하려는 금지어가 데이터베이스의 금지어 목록에 있는지 확인
+        await ctx.send("이미 목록에 있습니다.")
+    else:
+        ban.BANINSERT(msg)  #금지어 추가를위해 BANINSERT()호출 인자로 금지어 msg 전달
+        await ctx.send(ban.BANREAD()) #추가 후 금지어 목록 호출
+
+@client.command()
+async def delban(ctx, msg): #금지어목록 삭제
+    banlist = ban.BANREAD()
+    if msg in banlist:  #삭제할 금지어가 데이터베이스에 있는지 확인
+        ban.BANDELETE(msg)  #BANDELETE() 호출하여 금지어 삭제
+        await ctx.send(msg+"삭제")
+        await ctx.send(ban.BANREAD())   #삭제 후 금지어 목록 호출
+    else:
+        await ctx.send("목록에 없습니다.")
+
+@client.command()
+async def unmute(ctx, name):#채팅밴 언뮤트 명령어
+    user = await ctx.guild.fetch_member(int(name[3:21])) #입력한 멘션아이디에서 멤버 아이디만 슬라이싱
+    await ctx.channel.set_permissions(user,overwrite=None) #슬라이싱한 멤버아이디로 언뮤트
+    await ctx.send(str(user)+" unmute!")
+
+@client.command()
+async def banuserlist(ctx): #채팅벤 데이터베이스 출력 명령어
+    banuser, banusercount = ban.BANUSERREAD()   #데이터베이스 읽어오기
+    if banuser:
+        print(type(banuser))
+        for i in range(len(banuser)):       #가져온 데이터베이스 만큼 반복
+            await ctx.send(banuser[i]+"\tban count = "+str(banusercount[i])) #유저 밴카운트 출력
+    else:
+        await ctx.send("banuserlist's empty")
+        print("2")
+
+@client.command() 
+async def delbanuser(ctx, name):    #밴카운트 초기화 명령어(db에서 삭제)
+    user = await ctx.guild.fetch_member(int(name[3:21]))
+    ban.BANUSERDELETE(str(user))
+    await ctx.send(user+" 밴 카운트 초기화")
+
+@client.event
+async def on_message(ctx):
+    banlist = ban.BANREAD()
+    user = ctx.author
+    if any([word in ctx.content for word in banlist]):#금지어 삭제 기능
+        if ctx.author == client.user:   #금지어 목록 출력을 위해 봇이 쓰는 금지어는 pass
+            pass
+        elif ctx.content.startswith(client.command_prefix+"delban"):#메세지 시작이 !delban명령어일 경우
+            await client.process_commands(ctx) #명령어 실행
+        else:   #봇 이외에 금지어를 사용하면 메세지를 삭제하고 경고문 출력
+            banuser, banusercount = ban.BANUSERREAD()   #채팅밴 데이터베이스 읽어오기
+            userstr = str(user) #멤버형 변수는 사용하기 까다롭기때문에 문자열로 변환
+            if userstr in banuser:  #금지어를 사용한멤버가 데이터베이스에 있다면(2번이상 사용자)
+                ban.BANUSERUPDATE(userstr,banusercount[banuser.index(userstr)])#업데이트 명령어
+                await ctx.channel.send(userstr+"\tban count = "+str((banusercount[banuser.index(userstr)]+1)))
+
+                if banusercount[banuser.index(userstr)]+1 > 4: #밴카운트가 5번 이상
+                    await ctx.channel.set_permissions(user,send_messages=False) #채팅금지(MUTE)
+                    ban.BANUSERDELETE(userstr)  #채팅금지 후 데이터베이스에서 삭제
+                    await ctx.channel.send(userstr+"MUTE!")
+            else:
+                ban.BANUSERINSERT(userstr, int(1)) #금지어 사용이 처음인경우 데이터베이스 삽입
+                await ctx.channel.send(userstr+"\tban count = "+ '1')
+
+            await ctx.delete()
+            await ctx.channel.send("That Word Is Not Allowed To Be Used! Continued Use Of Mentioned Word Would Lead To Punishment!")
+    else:
+        await client.process_commands(ctx)
 
 @client.command()
 async def comment(ctx, url:str):

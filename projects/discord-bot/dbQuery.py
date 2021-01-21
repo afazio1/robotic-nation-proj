@@ -4,6 +4,43 @@ import sqlite3
 conn = sqlite3.connect("./artistDB.db")
 c = conn.cursor()
 
+class BAN:  #금지어 목록 관리
+    c.execute("CREATE TABLE IF NOT EXISTS BAN(NUM INTEGER PRIMARY KEY AUTOINCREMENT, WORD TEXT)")
+    c.execute("CREATE TABLE IF NOT EXISTS BANUSER(USER TEXT PRIMARY KEY, COUNT INTEGER)")
+
+    def BANINSERT(msg): #금지어 추가 메서드
+        c.execute("INSERT INTO BAN('WORD') VALUES(?)",[msg])
+    
+    def BANREAD(): #금지어 목록 호출 메서드
+        banlist=[] #금지어 목록을 저장할 리스트
+        for word in c.execute("SELECT WORD FROM BAN"):
+            banstr = list(word) #데이터베이스 리턴타입이 튜플이므로 리스트로 변환
+            banlist.append(str(banstr[0]))#리스트타입 문자열로 변환하여 리스트에 추가
+        return banlist #전체 금지어 목록 반환
+
+    def BANDELETE(msg): #금지어 삭제 메서드
+        c.execute("DELETE FROM BAN WHERE WORD = :WORD",{"WORD":msg})
+    
+    def BANUSERINSERT(user, cnt): #채팅밴 추가 메서드
+        c.execute("INSERT INTO BANUSER('USER','COUNT') VALUES(?,?)",(user, cnt))
+
+
+    def BANUSERREAD():  #채팅밴 목록 호출 메서드
+        banuser=[]
+        banusercount=[]
+        for word in c.execute("SELECT * FROM BANUSER"):
+            banuserstr = list(word) #데이터베이스를 리스트형태로 받아 유저와 밴카운트를 나눠서 리턴
+            banuser.append(banuserstr[0])
+            banusercount.append(banuserstr[1])
+        return banuser, banusercount
+    
+    def BANUSERDELETE(user): #채팅밴 삭제 메서드
+        c.execute("DELETE FROM BANUSER WHERE USER = :USER",{"USER":user})
+
+    def BANUSERUPDATE(user,cnt):    #채팅밴 업데이트 메서드
+        cnt=cnt+1   #업데이트마다 밴카운트 1 증가
+        c.execute("UPDATE BANUSER SET COUNT = ? WHERE USER = ?", (cnt, user))
+
 #CREATE
 def CREATE() :
     #테이블 생성
