@@ -215,14 +215,23 @@ async def unmute(ctx, name):#채팅밴 언뮤트 명령어
 @client.command()
 async def banuserlist(ctx): #채팅벤 데이터베이스 출력 명령어
     banuser, banusercount = ban.BANUSERREAD()   #데이터베이스 읽어오기
-    for i in range(len(banuser)):       #가져온 데이터베이스 만큼 반복
-        await ctx.send(banuser[i]+" "+str(banusercount[i])) #유저 밴카운트 출력
+    if banuser:
+        print(type(banuser))
+        for i in range(len(banuser)):       #가져온 데이터베이스 만큼 반복
+            await ctx.send(banuser[i]+"\tban count = "+str(banusercount[i])) #유저 밴카운트 출력
+    else:
+        await ctx.send("banuserlist's empty")
+        print("2")
+
+@client.command() 
+async def delbanuser(ctx, name):    #밴카운트 초기화 명령어(db에서 삭제)
+    user = await ctx.guild.fetch_member(int(name[3:21]))
+    ban.BANUSERDELETE(str(user))
+    await ctx.send(user+" 밴 카운트 초기화")
 
 @client.event
 async def on_message(ctx):
     banlist = ban.BANREAD()
-    user = ctx.author
-    
     if any([word in ctx.content for word in banlist]):#금지어 삭제 기능
         if ctx.author == client.user:   #금지어 목록 출력을 위해 봇이 쓰는 금지어는 pass
             pass
@@ -233,7 +242,7 @@ async def on_message(ctx):
             userstr = str(user) #멤버형 변수는 사용하기 까다롭기때문에 문자열로 변환
             if userstr in banuser:  #금지어를 사용한멤버가 데이터베이스에 있다면(2번이상 사용자)
                 ban.BANUSERUPDATE(userstr,banusercount[banuser.index(userstr)])#업데이트 명령어
-                await ctx.channel.send(userstr+" ban count = "+str((banusercount[banuser.index(userstr)]+1)))
+                await ctx.channel.send(userstr+"\tban count = "+str((banusercount[banuser.index(userstr)]+1)))
 
                 if banusercount[banuser.index(userstr)]+1 > 4: #밴카운트가 5번 이상
                     await ctx.channel.set_permissions(user,send_messages=False) #채팅금지(MUTE)
@@ -241,7 +250,7 @@ async def on_message(ctx):
                     await ctx.channel.send(userstr+"MUTE!")
             else:
                 ban.BANUSERINSERT(userstr, int(1)) #금지어 사용이 처음인경우 데이터베이스 삽입
-                await ctx.channel.send(userstr+" ban count = "+ '1')
+                await ctx.channel.send(userstr+"\tban count = "+ '1')
 
             await ctx.delete()
             await ctx.channel.send("That Word Is Not Allowed To Be Used! Continued Use Of Mentioned Word Would Lead To Punishment!")
