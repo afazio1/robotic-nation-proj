@@ -9,3 +9,10 @@ Requirement
 - selenium library
 - Beautifulsoup4 library
 - lxml library
+
+- play기능때 다운로드 받은 library 작성해야됨
+- mutagen library
+- 
+
+- ban기능때 다운로드 받은 library 작성해야됨
+- 
