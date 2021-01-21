@@ -417,4 +417,4 @@ async def comment(ctx, url:str):
 
         
 
-client.run('Song_player')    #YOUR_TOKEN
+client.run('YOUR_TOKEN')    #YOUR_TOKEN
