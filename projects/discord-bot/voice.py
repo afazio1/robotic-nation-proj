@@ -342,8 +342,15 @@ async def on_message(ctx):
     else:
         await client.process_commands(ctx)
 
-@client.command()
-async def comment(ctx, url:str):
+@client.command(
+    help="!comment [word or url]  왼쪽과 같은 형식으로 입력해주세요",
+	brief="Youtube 댓글, 좋아요, 닉네임을 가져오는 기능"
+)
+async def comment(ctx, url:str = "No_Entered"):
+    if url == "No_Entered":
+        await ctx.send("!comment [word or url]  왼쪽의 형식으로 입력해주세요")
+        return
+
     #입력한 str이 url일 경우
     if url.find("youtube.com/watch") > -1:
         yt_id, yt_comment, yt_like = Crawling_YT_Comment(url)
@@ -375,7 +382,7 @@ async def comment(ctx, url:str):
 
         emb2 = discord.Embed(title="Youtube", description="" ,color=discord.Color.dark_blue())
         try:
-            reaction, _r_user = await client.wait_for('reaction_add', timeout=5.0, check = chk_user)
+            reaction, _r_user = await client.wait_for('reaction_add', timeout=30.0, check = chk_user)
         except asyncio.TimeoutError:
             emb2.add_field(name="Time out", value="처음부터 다시 입력해주세요")
             await ctx.send(embed=emb2)
@@ -403,6 +410,5 @@ async def comment(ctx, url:str):
             if len(yt_id)==0:
                 emb2.add_field(name="Error or No comment", value="Please check the url")
             await ctx.send(embed=emb2)
-            return
 
-client.run('TOKEN')
+client.run('Nzk4NDY1MzE4MTEyNDYwODIw.X_1axg.QDVrczMWixV8vthq6JWUkRzyH7g')
