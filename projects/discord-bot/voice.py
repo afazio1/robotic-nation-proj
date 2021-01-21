@@ -265,8 +265,14 @@ async def stop(ctx):
     help="!clear # 으로 사용, #=삭제할 메세지 숫자(default=20)",
     brief="채팅채널 메세지(채팅)를 삭제해주는 명령어"
 ) #채팅채널 메세지 삭제 커맨드
-async def clear(ctx, amount=20): #삭제할 메세지 수를 입력하지 않으면 20개 삭제
-    await ctx.channel.purge(limit=int(amount)+1)#삭제 커맨트 인자 수 만큼 삭제+삭제커맨드메세지 포함 하여 삭제(+1)
+
+async def clear(ctx, amount): #삭제할 메세지 수를 입력하지 않으면 20개 삭제
+    if amount == '':
+        amount = 20
+    try:
+        await ctx.channel.purge(limit=int(amount)+1)#삭제 커맨트 인자 수 만큼 삭제+삭제커맨드메세지 포함 하여 삭제(+1)
+    except Exception:
+        await ctx.send("숫자를 입력하세요")
 
 @client.command(
     help="!banlist 로 사용",
@@ -315,12 +321,15 @@ async def delban(ctx, msg=''): #금지어목록 삭제
     brief="채팅차단을 풀어주는 명령어"
 )
 async def unmute(ctx, name=''):#채팅밴 언뮤트 명령어
-    if name:
-        user = await ctx.guild.fetch_member(int(name[3:21])) #입력한 멘션아이디에서 멤버 아이디만 슬라이싱
-        await ctx.channel.set_permissions(user,overwrite=None) #슬라이싱한 멤버아이디로 언뮤트
-        await ctx.send(str(user)+" 채팅차단 해제!")
+    if name[0:3] == '<@!':      #멘션 시작부분 확인
+        if name:
+            user = await ctx.guild.fetch_member(int(name[3:21])) #입력한 멘션아이디에서 멤버 아이디만 슬라이싱
+            await ctx.channel.set_permissions(user,overwrite=None) #슬라이싱한 멤버아이디로 언뮤트
+            await ctx.send(str(user)+" 채팅차단 해제!")
+        else:
+            await ctx.send("채팅차단 해제할 멤버 멘션을 입력하세요")
     else:
-        await ctx.send("채팅차단 해제할 멤버 멘션을 입력하세요")
+        await ctx.send("잘못된 사용자 입니다. 멘션을 이용하세요!")
 
 @client.command(
     help="#!banuserlist 로 사용",
@@ -339,12 +348,15 @@ async def banuserlist(ctx): #채팅벤 데이터베이스 출력 명령어
     brief="누적된 밴카운트를 초기화해주는 명령어"
 ) 
 async def delbanuser(ctx, name=''):    #밴카운트 초기화 명령어(db에서 삭제)
-    if name:
-        user = await ctx.guild.fetch_member(int(name[3:21]))
-        ban.BANUSERDELETE(str(user))
-        await ctx.send(str(user)+" 밴 카운트 초기화")
+    if name[0:3] == '<@!':      #멘션 시작부분 확인
+        if name:
+            user = await ctx.guild.fetch_member(int(name[3:21]))
+            ban.BANUSERDELETE(str(user))
+            await ctx.send(str(user)+" 밴 카운트 초기화")
+        else:
+            await ctx.send("밴 카운트를 초기화할 멤버 멘션을 입력하세요!")
     else:
-        await ctx.send("밴 카운트를 초기화할 멤버 멘션을 입력하세요!")
+        await ctx.send("잘못된 사용자 입니다. 멘션을 이용하세요!")
 
 @client.event
 async def on_message(ctx):
@@ -439,4 +451,4 @@ async def comment(ctx, url:str):
             await ctx.send(embed=emb2)
             return
 
-client.run('Nzk4NDY3MjA3NDc0NTc3NDA5.X_1ciQ.e7W1Up_RRPkXwL1E7UlDedbvp88')
+client.run('YOUR_TOKEN')
