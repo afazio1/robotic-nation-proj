@@ -6,6 +6,7 @@ import time
 #pip install beautifulsoup4
 #pip install selenium
 #exe파일 경로는 상대경로가 아닌 절대경로로 설정해야함.
+#영상에 대한 댓글을 크롤링하는 함수
 def Crawling_YT_Comment(comm):
     driver = webdriver.Chrome('Your absolute path of Chromedriver.exe')
     url = comm
@@ -60,6 +61,7 @@ def Crawling_YT_Comment(comm):
 
     return youtube_Ids, youtube_comments, youtube_likes
 
+#유튜브 검색기능을 사용하여 검색된 영상들에 대한 제목과 url을 가져오는 함수
 def Crawling_YT_Title(comm):
     driver = webdriver.Chrome('Your absolute path of Chromedriver.exe')
     url = "https://www.youtube.com/results?search_query={}".format(comm)

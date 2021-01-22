@@ -31,7 +31,7 @@ class Song :
                 }],
         }
         self.ydl_opts = ydl_opts
-    def remove_song(self) :
+    def remove_song(self) :          #다운로드 받았던 음악을 제거하는 함수
         song_there = os.path.isfile("song.mp3")
         try :
             if song_there :
@@ -39,7 +39,7 @@ class Song :
         except PermissionError:
             print("PermissionError occured while deletion")
             return
-    def download_song(self, url) :
+    def download_song(self, url) :   #mp3파일을 다운로드 하는 함수
         song_there = os.path.isfile("song.mp3")
         try :
             if song_there :
@@ -53,12 +53,12 @@ class Song :
         for file in os.listdir("./"):
             if file.endswith(".mp3"):
                 os.rename(file, "song.mp3")
-    def get_title(self, url) :
+    def get_title(self, url) :     #제목을 가져오는 기능
         with youtube_dl.YoutubeDL(self.ydl_opts) as ydl:
             info_dict = ydl.extract_info(url, download=False)
             video_title = info_dict.get('title', None)
         return video_title
-    def do_both(self, url) :
+    def do_both(self, url) :      #함수 두개를 동시에 호출하는 기능
         self.download_song(url)
         return self.get_title(url)
 
