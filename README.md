@@ -8,7 +8,7 @@ Before you run it, replace your_token from the client.run ('your_token') at voic
 # Requirement
 
 Library used in crawling
-- 자신에게 맞는 chromedriver.exe
+- chromedriver.exe
 - selenium library
 - Beautifulsoup4 library
 - lxml library
