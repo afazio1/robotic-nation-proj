@@ -70,6 +70,7 @@ async def place(ctx, pos: int):
     global player2
     global board
     global count
+    global gameOver
 
     if not gameOver:
         mark = ""
