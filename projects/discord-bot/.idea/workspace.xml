@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="365f73c4-db90-4006-a649-764c07570e8d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/beginner-bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/beginner-bot.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +37,8 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
@@ -257,9 +260,9 @@
       <item itemvalue="Python.modmail" />
       <item itemvalue="Python.server-info" />
       <item itemvalue="Python.test-bot" />
+      <item itemvalue="Python.test" />
       <item itemvalue="Python.tictactoe" />
       <item itemvalue="Python.voice" />
-      <item itemvalue="Python.test" />
       <item itemvalue="Python.youtube-bot" />
     </list>
   </component>
