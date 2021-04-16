@@ -1,0 +1,79 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	height: 100%;
+	width: 100%;
+}
+
+h1, h2 {
+	font-family: 'Roboto', sans-serif;
+	font-weight: 300;
+	text-align: center;
+	padding-bottom: 20px;
+	font-size: 200%;
+}
+
+h4 {
+	font-size: 85%;
+ 	color: gray;
+ 	font-family: 'Roboto', sans-serif;
+ 	font-weight: 300;
+ 	text-align: center;
+ 	padding-top: 20px;
+ 	padding-left: 20px;
+ 	padding-right: 20px;
+ 	padding-bottom: 5px;
+}
+
+
+.footer {
+	font-family: 'Roboto', sans-serif;
+	bottom: 0;
+	font-size: 75%;
+	padding: 5px;
+	padding-top: 20px;
+}
+
+.data-container {
+	border: 4px solid #2190E7;
+	margin-right: 5%;
+	margin-left: 5%;
+
+}
+
+.title {
+	background: linear-gradient(to left, #2190E7, #225A86);
+	padding: 20px;
+}
+
+.subtitle {
+	padding: 20px;
+	font-size: 150%;
+}
+
+div {
+	padding: 20px;
+}
+
+
+* {
+  box-sizing: border-box;
+}
+
+/* Create two equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 50%;
+  padding: 10px;
+  height: 300px; /* Should be removed. Only for demonstration */
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
