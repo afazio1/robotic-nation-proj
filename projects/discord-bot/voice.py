@@ -17,7 +17,7 @@ async def play(ctx, url : str):
 
     voiceChannel = discord.utils.get(ctx.guild.voice_channels, name='General')
     await voiceChannel.connect()
-    voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
+    voice = guild.voice
 
     ydl_opts = {
         'format': 'bestaudio/best',
@@ -37,8 +37,8 @@ async def play(ctx, url : str):
 
 @client.command()
 async def leave(ctx):
-    voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
-    if voice.is_connected():
+    voice = ctx.voice
+    if voice is not None or voice.is_connected():
         await voice.disconnect()
     else:
         await ctx.send("The bot is not connected to a voice channel.")
@@ -46,8 +46,8 @@ async def leave(ctx):
 
 @client.command()
 async def pause(ctx):
-    voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
-    if voice.is_playing():
+    voice = ctx.voice
+    if voice is not None and voice.is_playing():
         voice.pause()
     else:
         await ctx.send("Currently no audio is playing.")
@@ -55,8 +55,8 @@ async def pause(ctx):
 
 @client.command()
 async def resume(ctx):
-    voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
-    if voice.is_paused():
+    voice = ctx.voice
+    if voice is not None and voice.is_paused():
         voice.resume()
     else:
         await ctx.send("The audio is not paused.")
@@ -64,8 +64,11 @@ async def resume(ctx):
 
 @client.command()
 async def stop(ctx):
-    voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
-    voice.stop()
+    voice = ctx.voice
+    if voice is None:
+        await ctx.send("The bot is not connected to a voice channel.")
+    else:
+        voice.stop()
 
 
 client.run('YOUR_TOKEN')
