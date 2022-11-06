@@ -99,15 +99,14 @@ async def play(ctx, *, search: wavelink.YouTubeTrack):
 @client.command()
 async def skip(ctx):
     vc = ctx.voice_client
+    # # If the bot is connected to a voice channel
     if vc:
-        if not vc.is_playing():
-            return await ctx.send("Nothing is playing.")
+        # If the queue is empty, stop the current music and return appropriate message
         if vc.queue.is_empty:
-            return await vc.stop()
-
-        await vc.seek(vc.track.length * 1000)
-        if vc.is_paused():
-            await vc.resume()
+            await vc.stop()
+            return await ctx.send("The queue is empty")
+        else: # Fetch the next song from the queue
+            await vc.play(vc.queue.get())
     else:
         await ctx.send("The bot is not connected to a voice channel.")
 
